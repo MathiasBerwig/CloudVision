@@ -1,4 +1,4 @@
-package io.github.mathiasberwig.cloudvision;
+package io.github.mathiasberwig.cloudvision.presentation.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import io.github.mathiasberwig.cloudvision.R;
 
 public class SelectImageActivity extends AppCompatActivity {
 
