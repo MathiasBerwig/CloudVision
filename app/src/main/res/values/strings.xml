@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Cloud Vision</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Floating Action Button -->
+    <string name="action_camera">Camera</string>
+    <string name="action_gallery">Gallery</string>
 </resources>

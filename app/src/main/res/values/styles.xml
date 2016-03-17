@@ -1,14 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
+        <item name="android:windowActionBar">false</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -17,4 +19,46 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.MaterialSheetFab.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Widget.MaterialSheetFab.Fab" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/fab_spacing</item>
+        <item name="android:layout_marginBottom">@dimen/fab_spacing</item>
+        <item name="android:layout_marginLeft">@dimen/fab_spacing</item>
+        <item name="android:layout_marginRight">@dimen/fab_spacing</item>
+        <item name="android:elevation" tools:ignore="NewApi">@dimen/fab_elevation</item>
+        <item name="fabSize">normal</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+
+    <style name="Widget.MaterialSheetFab.Sheet" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginBottom">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginLeft">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginRight">@dimen/sheet_spacing</item>
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+        <item name="cardElevation">@dimen/fab_sheet_elevation</item>
+        <item name="cardMaxElevation">@dimen/fab_sheet_elevation</item>
+        <item name="contentPadding">-3dp</item>
+    </style>
+
+    <style name="TextAppearance.MaterialSheetFab.Sheet.Item" parent="">
+        <item name="android:layout_width">@dimen/sheet_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/sheet_item_spacing</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textSize">@dimen/sheet_item_textsize</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
+    </style>
 </resources>
