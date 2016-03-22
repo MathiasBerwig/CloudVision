@@ -68,6 +68,7 @@
                     android:id="@+id/fab_sheet_item_photo"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:drawableStart="@drawable/ic_photo_camera_black_24dp"
+                    android:onClick="startCamera"
                     android:text="@string/action_camera" />
 
                 <!-- Gallery -->
@@ -75,6 +76,7 @@
                     android:id="@+id/fab_sheet_item_gallery"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:drawableStart="@drawable/ic_photo_library_black_24dp"
+                    android:onClick="startGalleryChooser"
                     android:text="@string/action_gallery" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
