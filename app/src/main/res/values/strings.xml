@@ -5,4 +5,8 @@
     <!-- Floating Action Button -->
     <string name="action_camera">Camera</string>
     <string name="action_gallery">Gallery</string>
+
+    <!-- Errors -->
+    <string name="image_picker_error">Something is wrong with that image. Pick a different one please.</string>
+    <string name="api_request_error">Failed to make API request. Check your internet connection.</string>
 </resources>
