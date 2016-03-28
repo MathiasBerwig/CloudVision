@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_image_white_24dp" />
+        android:src="@drawable/ic_photo_white_24dp" />
 
     <!-- Overlay that dims the screen -->
     <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
@@ -67,7 +67,7 @@
                 <TextView
                     android:id="@+id/fab_sheet_item_photo"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableStart="@drawable/ic_photo_camera_black_24dp"
+                    android:drawableStart="@drawable/ic_camera_alt_grey_700_24dp"
                     android:onClick="startCamera"
                     android:text="@string/action_camera" />
 
@@ -75,7 +75,7 @@
                 <TextView
                     android:id="@+id/fab_sheet_item_gallery"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableStart="@drawable/ic_photo_library_black_24dp"
+                    android:drawableStart="@drawable/ic_photo_library_grey_700_24dp"
                     android:onClick="startGalleryChooser"
                     android:text="@string/action_gallery" />
             </LinearLayout>
