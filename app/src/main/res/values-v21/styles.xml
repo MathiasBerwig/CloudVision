@@ -8,5 +8,7 @@
 
     <style name="AppTheme" parent="Theme.MaterialSheetFab.Base">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/navigationBarColor</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

@@ -22,6 +22,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".presentation.activity.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.MainActivity" />
+
         <service
             android:name=".controller.service.CloudVisionUploader"
             android:exported="false" />

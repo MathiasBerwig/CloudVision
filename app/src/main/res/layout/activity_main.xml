@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.github.mathiasberwig.cloudvision.presentation.activity.MainActivity">
+
+    <com.github.florent37.materialviewpager.MaterialViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:viewpager_pagerTitleStrip="@layout/custom_tab"
+        app:viewpager_animatedHeaderImage="true"
+        app:viewpager_color="@color/colorPrimary"
+        app:viewpager_disableToolbar="false"
+        app:viewpager_displayToolbarWhenSwipe="true"
+        app:viewpager_enableToolbarElevation="true"
+        app:viewpager_headerAdditionalHeight="20dp"
+        app:viewpager_headerAlpha="0.8"
+        app:viewpager_headerHeight="220dp"
+        app:viewpager_hideLogoWithFade="false"
+        app:viewpager_hideToolbarAndTitle="true"
+        app:viewpager_parallaxHeaderFactor="1.5"
+        app:viewpager_transparentToolbar="true" />
+</RelativeLayout>
