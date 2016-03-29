@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Floating Action Button -->
     <dimen name="fab_spacing">@dimen/keyline_spacing</dimen>
-    <dimen name="sheet_spacing">0dp</dimen>
     <dimen name="fab_sheet_elevation">4dp</dimen>
+
+    <!-- Floating Action Button Sheet -->
+    <dimen name="sheet_spacing">0dp</dimen>
 </resources>
