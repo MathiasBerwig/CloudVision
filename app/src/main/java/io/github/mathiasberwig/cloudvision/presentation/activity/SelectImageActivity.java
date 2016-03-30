@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -96,11 +97,18 @@ public class SelectImageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets the {@link Toolbar} view and sets the {@code ActionBar}.
+     */
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * Gets the {@link R.id#fab}, {@link R.id#fab_sheet} and {@link R.id#dim_overlay}. Initializes
+     * and set event listener for {@link #materialSheetFab}.
+     */
     private void setupFAB() {
         FAB fab = (FAB) findViewById(R.id.fab);
         View sheetView = findViewById(R.id.fab_sheet);
@@ -130,19 +138,35 @@ public class SelectImageActivity extends AppCompatActivity {
         });
     }
 
-    private int getStatusBarColor() {
+    /**
+     * Get the current Status Bar color.
+     *
+     * @return Color of status bar.
+     */
+    private @ColorInt int getStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return getWindow().getStatusBarColor();
         }
         return 0;
     }
 
-    private void setStatusBarColor(int color) {
+    /**
+     * Set the Status Bar color.
+     *
+     * @param color New color of status bar.
+     */
+    private void setStatusBarColor(@ColorInt int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(color);
         }
     }
 
+    /**
+     * Creates an intent with {@link Intent#ACTION_GET_CONTENT} to select a photo. Starts the intent
+     * with {@code startActivityForResult}.
+     *
+     * @param view Mandatory to use with {@code onClick} event.
+     */
     public void startGalleryChooser(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -150,6 +174,12 @@ public class SelectImageActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
     }
 
+    /**
+     * Request permission to use camera and creates an intent with {@link MediaStore#ACTION_IMAGE_CAPTURE}
+     * to take a photo. Starts the intent with {@code startActivityForResult}.
+     *
+     * @param view Mandatory to use with {@code onClick} event.
+     */
     public void startCamera(View view) {
         if (PermissionUtils.requestPermission(this, CAMERA_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -158,6 +188,11 @@ public class SelectImageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets a new file to store the image taken with {@link #startCamera(View)} method.
+     *
+     * @return new file on {@link Environment#DIRECTORY_PICTURES} with {@link #FILE_NAME}.
+     */
     public File getCameraFile() {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
