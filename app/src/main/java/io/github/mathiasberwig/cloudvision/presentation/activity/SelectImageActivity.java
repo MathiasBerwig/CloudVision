@@ -3,11 +3,9 @@ package io.github.mathiasberwig.cloudvision.presentation.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
-import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 
 import java.io.File;
 
@@ -32,7 +29,6 @@ public class SelectImageActivity extends AppCompatActivity {
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private MaterialSheetFab materialSheetFab;
-    private int statusBarColor;
 
     public static final String FILE_NAME = "cloud_vision.jpg";
 
@@ -119,46 +115,6 @@ public class SelectImageActivity extends AppCompatActivity {
 
         // Initialize material sheet FAB
         materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay, sheetColor, fabColor);
-
-        // Set material sheet event listener
-        materialSheetFab.setEventListener(new MaterialSheetFabEventListener() {
-            @Override
-            public void onShowSheet() {
-                // Save current status bar color
-                statusBarColor = getStatusBarColor();
-                // Set darker status bar color to match the dim overlay
-                setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            }
-
-            @Override
-            public void onHideSheet() {
-                // Restore status bar color
-                setStatusBarColor(statusBarColor);
-            }
-        });
-    }
-
-    /**
-     * Get the current Status Bar color.
-     *
-     * @return Color of status bar.
-     */
-    private @ColorInt int getStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return getWindow().getStatusBarColor();
-        }
-        return 0;
-    }
-
-    /**
-     * Set the Status Bar color.
-     *
-     * @param color New color of status bar.
-     */
-    private void setStatusBarColor(@ColorInt int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(color);
-        }
     }
 
     /**
