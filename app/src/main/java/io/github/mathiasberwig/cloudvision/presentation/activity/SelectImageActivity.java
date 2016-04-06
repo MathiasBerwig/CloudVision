@@ -25,8 +25,8 @@ public class SelectImageActivity extends AppCompatActivity {
     private static final String TAG = SelectImageActivity.class.getName();
 
     private static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
+    private static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    private static final int CAMERA_IMAGE_REQUEST = 3;
 
     private MaterialSheetFab materialSheetFab;
 
