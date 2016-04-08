@@ -25,6 +25,7 @@
         <activity
             android:name=".presentation.activity.MainActivity"
             android:label="@string/title_activity_main"
+            android:noHistory="true"
             android:theme="@style/AppTheme.MainActivity" />
 
         <service

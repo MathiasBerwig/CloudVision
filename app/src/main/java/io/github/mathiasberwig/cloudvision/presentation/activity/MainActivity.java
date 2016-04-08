@@ -1,5 +1,6 @@
 package io.github.mathiasberwig.cloudvision.presentation.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -35,6 +36,18 @@ public class MainActivity extends AppCompatActivity {
     private MaterialViewPager viewPager;
     private SmartTabLayout customTab;
     private Drawable headerImage;
+
+    /**
+     * Factory method to create a new MainActivity instance.
+     *
+     * @param context Context to be used to start the activity.
+     * @param imageUri {@link CloudVisionUploader#EXTRA_IMAGE_URI}.
+     */
+    public static void newInstance(Context context, Uri imageUri) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(CloudVisionUploader.EXTRA_IMAGE_URI, imageUri);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

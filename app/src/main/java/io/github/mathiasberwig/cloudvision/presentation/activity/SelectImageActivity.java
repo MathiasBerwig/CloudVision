@@ -1,7 +1,10 @@
 package io.github.mathiasberwig.cloudvision.presentation.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +24,7 @@ import java.io.File;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.PermissionUtils;
+import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
 import io.github.mathiasberwig.cloudvision.presentation.custom_view.FAB;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LoadingFragment;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment;
@@ -35,6 +39,18 @@ public class SelectImageActivity extends AppCompatActivity {
     // UI Components
     private MaterialSheetFab materialSheetFab;
     private MenuItem menuSettings;
+
+    /**
+     * Receiver that is executed when the {@link CloudVisionUploader} finishes sending the image to
+     * server. It starts a new instance of {@link MainActivity} to show the results.
+     */
+    private BroadcastReceiver uploadCompleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MainActivity.newInstance(context, (Uri) intent.getParcelableExtra(CloudVisionUploader.EXTRA_IMAGE_URI));
+            toggleLoading(false);
+        }
+    };
 
     public static final String FILE_NAME = "cloud_vision.jpg";
 
@@ -94,12 +110,29 @@ public class SelectImageActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Gets the image chosen by the user and start uploading it to the server
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            // TODO: Send image to GCM
+            CloudVisionUploader.start(this, data.getData());
+            toggleLoading(true);
         }
         else if(requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            // TODO: Send image to GCM
+            CloudVisionUploader.start(this, Uri.fromFile(getCameraFile()));
+            toggleLoading(true);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        registerReceiver(uploadCompleteReceiver, new IntentFilter(CloudVisionUploader.ACTION_DONE));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(uploadCompleteReceiver);
     }
 
     /**
