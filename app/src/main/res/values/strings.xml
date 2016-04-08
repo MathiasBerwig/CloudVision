@@ -17,4 +17,13 @@
     <string name="title_tab_logos">Logos</string>
     <string name="title_tab_landmarks">Landmarks</string>
     <string name="title_tab_default">Dumb</string>
+    
+    <!-- Select Image Fragment -->
+    <string-array name="loading_subtitles">
+        <item>Training robots</item>
+        <item>Expanding neural networks</item>
+        <item>Distorting the space-time continuum</item>
+        <item>Collecting medicinal herbs</item>
+        <item>Calibrating thrusters</item>
+    </string-array>
 </resources>

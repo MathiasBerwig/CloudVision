@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 
@@ -20,6 +22,8 @@ import java.io.File;
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.PermissionUtils;
 import io.github.mathiasberwig.cloudvision.presentation.custom_view.FAB;
+import io.github.mathiasberwig.cloudvision.presentation.fragment.LoadingFragment;
+import io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment;
 
 public class SelectImageActivity extends AppCompatActivity {
     private static final String TAG = SelectImageActivity.class.getName();
@@ -28,7 +32,9 @@ public class SelectImageActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSIONS_REQUEST = 2;
     private static final int CAMERA_IMAGE_REQUEST = 3;
 
+    // UI Components
     private MaterialSheetFab materialSheetFab;
+    private MenuItem menuSettings;
 
     public static final String FILE_NAME = "cloud_vision.jpg";
 
@@ -45,6 +51,9 @@ public class SelectImageActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_select_image, menu);
+
+        // Get the Action Settings menu item, so we can show/hide it after
+        menuSettings = menu.findItem(R.id.action_settings);
         return true;
     }
 
@@ -115,6 +124,44 @@ public class SelectImageActivity extends AppCompatActivity {
 
         // Initialize material sheet FAB
         materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay, sheetColor, fabColor);
+    }
+
+    /**
+     * Change the layout params of the window, turning it full screen or not; toggle visibility of
+     * FAB and replaces the current fragment.
+     *
+     * @param isLoading {@code true} to set activity full screen, hide the FAB and load the
+     * {@link LoadingFragment}; {@code false} to remove activity's full screen flag, show FAB and
+     * load the {@link SelectImageFragment}.
+     */
+    private void toggleLoading(boolean isLoading) {
+
+        // Create the transaction to replace fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Toggle visibility of system status bar and FAB then replaces the fragment
+        if (isLoading) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+            materialSheetFab.hideSheetThenFab();
+
+            LoadingFragment loadingFragment = LoadingFragment.newInstance();
+            transaction.replace(R.id.fragment_container, loadingFragment);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+            materialSheetFab.showFab();
+
+            SelectImageFragment selectImageFragment = SelectImageFragment.newInstance();
+            transaction.replace(R.id.fragment_container, selectImageFragment);
+        }
+
+        // Toggle visibility of Settings menu item
+        menuSettings.setVisible(!isLoading);
+
+        transaction.commit();
     }
 
     /**

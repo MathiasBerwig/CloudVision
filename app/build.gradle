@@ -64,4 +64,14 @@ dependencies {
      * SmartTabLayout
      */
     compile 'com.ogaclejapan.smarttablayout:library:1.6.0@aar'
+
+    /**
+     * H Text View
+     */
+    compile 'hanks.xyz:htextview-library:0.1.3'
+
+    /**
+     * android-gif-drawable
+     */
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.15'
 }
