@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
 
     private MaterialViewPager viewPager;
-    private SmartTabLayout customTab;
     private Drawable headerImage;
 
     /**
@@ -87,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
      */
     private void findViews() {
         viewPager = (MaterialViewPager) findViewById(R.id.view_pager);
-        customTab = (SmartTabLayout) findViewById(R.id.view_pager_tab);
     }
 
     /**
-     * Set's the adapter, {@link #headerImage} and {@link #customTab} of {@link #viewPager}.
+     * Set's the adapter, {@link #headerImage} and {@link PagerTitleStrip} of {@link #viewPager}.
      */
     private void setupViewPager() {
         viewPager.getViewPager().setAdapter(new FragmentPageAdapter(getSupportFragmentManager(), this));
         viewPager.setImageDrawable(headerImage, 500);
-        customTab.setViewPager(viewPager.getViewPager());
+        viewPager.getViewPager().setOffscreenPageLimit(viewPager.getViewPager().getAdapter().getCount());
+        viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
     }
 
     /**

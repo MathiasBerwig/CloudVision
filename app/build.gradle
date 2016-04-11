@@ -61,11 +61,6 @@ dependencies {
     }
 
     /**
-     * SmartTabLayout
-     */
-    compile 'com.ogaclejapan.smarttablayout:library:1.6.0@aar'
-
-    /**
      * H Text View
      */
     compile 'hanks.xyz:htextview-library:0.1.3'
