@@ -47,6 +47,7 @@ public class SelectImageActivity extends AppCompatActivity {
     private BroadcastReceiver uploadCompleteReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // TODO: Check if the response is valid
             MainActivity.newInstance(context, (Uri) intent.getParcelableExtra(CloudVisionUploader.EXTRA_IMAGE_URI));
             toggleLoading(false);
         }
