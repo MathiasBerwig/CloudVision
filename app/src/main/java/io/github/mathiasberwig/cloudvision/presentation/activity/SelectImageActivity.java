@@ -122,15 +122,15 @@ public class SelectImageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         registerReceiver(uploadCompleteReceiver, new IntentFilter(CloudVisionUploader.ACTION_DONE));
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
 
         unregisterReceiver(uploadCompleteReceiver);
     }
