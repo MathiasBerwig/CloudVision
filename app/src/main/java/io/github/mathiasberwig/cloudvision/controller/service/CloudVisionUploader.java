@@ -59,6 +59,7 @@ public class CloudVisionUploader extends IntentService {
     public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.ACTION_DONE";
 
     public static BatchAnnotateImagesResponse lastResponse;
+    public static Bitmap sentImage;
 
     public CloudVisionUploader() {
         super("CloudVisionUploader");
@@ -113,6 +114,9 @@ public class CloudVisionUploader extends IntentService {
             if (options.getBoolean(EXTRA_IMAGE_RESIZE)) {
                 bitmap = BitmapUtils.scaleBitmapDown(bitmap, 800);
             }
+
+            // Store the scaled (or not) image sent to CloudVision server
+            sentImage = bitmap;
 
             // Add the image
             final Image base64EncodedImage = new Image();
