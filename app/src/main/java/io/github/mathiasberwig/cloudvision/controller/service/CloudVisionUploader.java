@@ -19,8 +19,8 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.BitmapUtils;
@@ -58,7 +59,7 @@ public class CloudVisionUploader extends IntentService {
 
     public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.ACTION_DONE";
 
-    public static BatchAnnotateImagesResponse lastResponse;
+    public static AnnotateImageResponse lastResponse;
     public static Bitmap sentImage;
 
     public CloudVisionUploader() {
@@ -89,7 +90,6 @@ public class CloudVisionUploader extends IntentService {
 
         context.startService(intent);
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -200,10 +200,14 @@ public class CloudVisionUploader extends IntentService {
             Log.d(TAG, "created Cloud Vision request object, sending request: " + batchAnnotateImagesRequest.toPrettyString());
 
             // Store the response on a static field because BatchAnnotateImagesResponse does not
-            // implement any serialization
-            lastResponse = annotateRequest.execute();
+            // implement any serialization. As we are sending just one image, the CV API will
+            // always return 1 response (or none).
+            List<AnnotateImageResponse> responses = annotateRequest.execute().getResponses();
+            lastResponse = responses != null && !responses.isEmpty() ? responses.get(0) : null;
 
-            Log.d(TAG, "CloudVision Response: \n" + lastResponse.toPrettyString());
+            if (lastResponse != null) {
+                Log.d(TAG, "CloudVision Response: \n" + lastResponse.toPrettyString());
+            }
 
         } catch (FileNotFoundException e) {
             Log.d(TAG, "Image picking failed because " + e.getMessage());
