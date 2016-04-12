@@ -26,4 +26,8 @@
         <item>Collecting medicinal herbs</item>
         <item>Calibrating thrusters</item>
     </string-array>
+
+    <!-- Main Activity -->
+    <string name="title_hint">Hint</string>
+    <string name="hint_label">Each thing detected by Computer Vision gets a tag and a score. The tag is nothing more than a label, and the score shows the similarity degree found in the picture.</string>
 </resources>

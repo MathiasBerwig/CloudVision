@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
-import io.github.mathiasberwig.cloudvision.presentation.adapter.RecyclerViewAdapter;
-
+import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
+import io.github.mathiasberwig.cloudvision.presentation.adapter.LabelsAdapter;
 
 public class LabelsFragment extends Fragment {
 
@@ -46,13 +47,9 @@ public class LabelsFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(mContentItems));
+        List<EntityAnnotation> labelAnnotations = CloudVisionUploader.lastResponse.getLabelAnnotations();
+        mAdapter = new RecyclerViewMaterialAdapter(new LabelsAdapter(getString(R.string.hint_label), labelAnnotations));
         mRecyclerView.setAdapter(mAdapter);
-        {
-            for (int i = 0; i < ITEM_COUNT; ++i)
-                mContentItems.add(new Object());
-            mAdapter.notifyDataSetChanged();
-        }
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
