@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/txtHint"
+                android:id="@+id/txt_title_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|top"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="false"
-                android:layout_below="@+id/txtHint"
+                android:layout_below="@+id/txt_title_hint"
                 android:layout_gravity="center"
                 android:padding="8dp"
                 android:textColor="@color/colorSecondaryText" />
