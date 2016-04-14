@@ -24,7 +24,7 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<Object> contents;
 
-    static final int TYPE_HEADER = 0;
+    static final int TYPE_HINT = 0;
     static final int TYPE_CELL = 1;
 
     /**
@@ -44,7 +44,7 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // We should use instance of operator to determine the type of view, but the hint will
         // always be the first, so we can code it this way
         switch (position) {
-            case 0: return TYPE_HEADER;
+            case 0: return TYPE_HINT;
             default: return TYPE_CELL;
         }
     }
@@ -60,7 +60,7 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         View view;
 
         switch (viewType) {
-            case TYPE_HEADER: {
+            case TYPE_HINT: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_card_hint, parent, false);
                 return new HintViewHolder(view) {};
             }
@@ -75,12 +75,11 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
-            case TYPE_HEADER: {
+            case TYPE_HINT: {
                 // Set the hint of Label
-                final TextView txtHint = ((HintViewHolder) holder).txtHint;
+                final TextView txtHint = ((HintViewHolder) holder).txtLabelHint;
                 final String hint = (String) contents.get(position);
                 txtHint.setText(hint);
-
                 break;
             }
             case TYPE_CELL: {
@@ -104,11 +103,11 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      * ViewHolder to store a {@link TextView} that will show a hint to the user.
      */
     public static class HintViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtHint;
+        TextView txtLabelHint;
 
         public HintViewHolder(View v) {
             super(v);
-            txtHint = (TextView) v.findViewById(R.id.txt_hint);
+            txtLabelHint = (TextView) v.findViewById(R.id.txt_label_hint);
         }
     }
 
@@ -117,8 +116,8 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      * with annotations about the image.
      */
     public static class LabelViewHolder extends RecyclerView.ViewHolder {
-        public IconRoundCornerProgressBar progressBar;
-        public TextView txtProgress;
+        IconRoundCornerProgressBar progressBar;
+        TextView txtProgress;
 
         public LabelViewHolder(View v) {
             super(v);

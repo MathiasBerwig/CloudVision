@@ -57,7 +57,7 @@ public class CloudVisionUploader extends IntentService {
     private static final int DEFAULT_MAX_IMAGE_PROPERTIES = 5;
     private static final int DEFAULT_IMAGE_QUALITY = 75;
 
-    public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.ACTION_DONE";
+    public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader.ACTION_DONE";
 
     public static AnnotateImageResponse lastResponse;
     public static Bitmap sentImage;

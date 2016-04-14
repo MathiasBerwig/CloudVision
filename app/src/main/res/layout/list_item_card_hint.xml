@@ -35,7 +35,7 @@
                 android:textColor="@color/colorPrimaryText" />
 
             <TextView
-                android:id="@+id/txt_hint"
+                android:id="@+id/txt_label_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="false"
