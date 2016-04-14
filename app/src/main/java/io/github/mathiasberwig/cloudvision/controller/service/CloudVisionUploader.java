@@ -36,6 +36,7 @@ import io.github.mathiasberwig.cloudvision.controller.BitmapUtils;
 public class CloudVisionUploader extends IntentService {
     private static final String TAG = CloudVisionUploader.class.getName();
 
+    // TODO: Before you run your application, you need a Google Cloud Vision API key.
     private static final String CLOUD_VISION_API_KEY = "";
 
     public static final String EXTRA_LABEL_DETECTION = "EXTRA_LABEL_DETECTION";
