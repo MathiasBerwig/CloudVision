@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 
@@ -161,12 +160,10 @@ public class SelectImageActivity extends AppCompatActivity {
     }
 
     /**
-     * Change the layout params of the window, turning it full screen or not; toggle visibility of
-     * FAB and replaces the current fragment.
+     * Toggles visibility of FAB and replaces the current fragment.
      *
-     * @param isLoading {@code true} to set activity full screen, hide the FAB and load the
-     * {@link LoadingFragment}; {@code false} to remove activity's full screen flag, show FAB and
-     * load the {@link SelectImageFragment}.
+     * @param isLoading {@code true} to hide the FAB and load the {@link LoadingFragment};
+     * {@code false} to show FAB and load the {@link SelectImageFragment}.
      */
     private void toggleLoading(boolean isLoading) {
 
@@ -175,17 +172,11 @@ public class SelectImageActivity extends AppCompatActivity {
 
         // Toggle visibility of system status bar and FAB then replaces the fragment
         if (isLoading) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
             materialSheetFab.hideSheetThenFab();
 
             LoadingFragment loadingFragment = LoadingFragment.newInstance();
             transaction.replace(R.id.fragment_container, loadingFragment);
         } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
             materialSheetFab.showFab();
 
             SelectImageFragment selectImageFragment = SelectImageFragment.newInstance();
