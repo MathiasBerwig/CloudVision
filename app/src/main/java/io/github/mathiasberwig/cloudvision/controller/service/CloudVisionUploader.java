@@ -211,13 +211,13 @@ public class CloudVisionUploader extends IntentService {
             }
 
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "Image picking failed because " + e.getMessage());
+            Log.e(TAG, "Image picking failed because " + e.getMessage());
             result.putExtra(EXTRA_RESULT_ERROR, getString(R.string.image_picker_error));
         } catch (GoogleJsonResponseException e) {
-            Log.d(TAG, "failed to make API request because " + e.getContent());
+            Log.e(TAG, "failed to make API request because " + e.getContent());
             result.putExtra(EXTRA_RESULT_ERROR, getString(R.string.api_request_error));
         } catch (IOException e) {
-            Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
+            Log.e(TAG, "failed to make API request because of other IOException " + e.getMessage());
             result.putExtra(EXTRA_RESULT_ERROR, getString(R.string.api_request_error));
         }
 
