@@ -130,7 +130,7 @@ public class CloudVisionUploader extends IntentService {
         intent.putExtra(EXTRA_LABEL_DETECTION, sp.getBoolean(EXTRA_LABEL_DETECTION, true));
         intent.putExtra(EXTRA_LOGO_DETECTION, sp.getBoolean(EXTRA_LOGO_DETECTION, true));
         intent.putExtra(EXTRA_LANDMARK_DETECTION, sp.getBoolean(EXTRA_LANDMARK_DETECTION, true));
-        intent.putExtra(EXTRA_IMAGE_PROPERTIES, sp.getBoolean(EXTRA_IMAGE_PROPERTIES, true));
+        intent.putExtra(EXTRA_IMAGE_PROPERTIES, sp.getBoolean(EXTRA_IMAGE_PROPERTIES, false));
         intent.putExtra(EXTRA_MAX_LABELS, sp.getInt(EXTRA_MAX_LABELS, DEFAULT_MAX_LABELS));
         intent.putExtra(EXTRA_MAX_LOGOS, sp.getInt(EXTRA_MAX_LOGOS, DEFAULT_MAX_LOGOS));
         intent.putExtra(EXTRA_MAX_LANDMARKS, sp.getInt(EXTRA_MAX_LANDMARKS, DEFAULT_MAX_LANDMARKS));
