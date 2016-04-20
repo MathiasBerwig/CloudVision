@@ -1,5 +1,22 @@
-<android.support.v7.widget.RecyclerView
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recycler_view_landmarks"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Material View Pager Placeholder -->
+        <include layout="@layout/material_view_pager_placeholder"/>
+
+        <!-- Landmark Info Card -->
+        <include layout="@layout/fragment_card_landmark_info"/>
+
+        <!-- Landmark Map Card -->
+        <include layout="@layout/fragment_card_landmark_map"/>
+
+    </LinearLayout>
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

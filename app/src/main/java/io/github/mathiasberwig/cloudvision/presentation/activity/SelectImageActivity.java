@@ -13,17 +13,24 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.PermissionUtils;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
+import io.github.mathiasberwig.cloudvision.controller.service.RestApisConsumer;
 import io.github.mathiasberwig.cloudvision.presentation.custom_view.FAB;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LoadingFragment;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment;
@@ -32,8 +39,9 @@ public class SelectImageActivity extends AppCompatActivity {
     private static final String TAG = SelectImageActivity.class.getName();
 
     private static final int GALLERY_IMAGE_REQUEST = 1;
-    private static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    private static final int CAMERA_IMAGE_REQUEST = 3;
+    private static final int CAMERA_IMAGE_REQUEST = 2;
+    private static final int CAMERA_PERMISSIONS_REQUEST = 3;
+    private static final int GALLERY_PERMISSIONS_REQUEST = 4;
 
     // UI Components
     private MaterialSheetFab materialSheetFab;
@@ -41,17 +49,71 @@ public class SelectImageActivity extends AppCompatActivity {
 
     /**
      * Receiver that is executed when the {@link CloudVisionUploader} finishes sending the image to
-     * server. It starts a new instance of {@link MainActivity} to show the results.
+     * server. In case of any errors, it disable loading animation and shows a Toast to the user.
+     * If the image was sent successfully, it starts the {@link RestApisConsumer} to query third-party
+     * servers info about the image.
      */
     private BroadcastReceiver uploadCompleteReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: Check if the response is valid
-            MainActivity.newInstance(context);
+            // Valid response from Google Cloud Vision
+            if (intent.hasExtra(CloudVisionUploader.EXTRA_RESULT_LABELS)
+             || intent.hasExtra(CloudVisionUploader.EXTRA_RESULT_LANDMARK)) {
+
+                // Start the RestApisConsumer IntentService
+                Intent service = new Intent(SelectImageActivity.this, RestApisConsumer.class);
+                service.putExtras(intent.getExtras());
+                startService(service);
+            } else
+
+            // Error uploading image or retrieving data from Google Cloud Vision
+            if (intent.hasExtra(CloudVisionUploader.EXTRA_RESULT_ERROR)) {
+                // Show Toast with the error
+                Toast.makeText(SelectImageActivity.this,
+                        intent.getStringExtra(CloudVisionUploader.EXTRA_RESULT_ERROR),
+                        Toast.LENGTH_LONG).show();
+
+                // Disable loading animation
+                toggleLoading(false);
+
+                // TODO: Show EmptyView with Error Message
+            } else
+
+            // CloudVision haven't returned enough data
+            {
+                // Disable loading animation
+                toggleLoading(false);
+
+                // Show Toast with the error
+                Toast.makeText(SelectImageActivity.this,
+                        "Empty View",
+                        Toast.LENGTH_LONG).show();
+
+                // TODO: Show EmptyView
+                Log.d(TAG, "onReceive: empty view");
+            }
+        }
+    };
+
+    /**
+     * Receiver that is executed when the {@link RestApisConsumer} finishes querying data from
+     * third-party services about the image sent by {@link CloudVisionUploader}. It stops the loading
+     * animation and starts {@link MainActivity}.
+     */
+    private BroadcastReceiver queryCompleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Start MainActivity with the info returned from Google Cloud Vision and third-party APIs
+            MainActivity.newInstance(context, intent.getExtras());
+
+            // Disable loading animation
             toggleLoading(false);
         }
     };
 
+    /**
+     * The filename of the image selected by the user. It's stored on the default application folder.
+     */
     public static final String FILE_NAME = "cloud_vision.jpg";
 
     @Override
@@ -101,8 +163,14 @@ public class SelectImageActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
-            startCamera(null);
+        if (requestCode == CAMERA_PERMISSIONS_REQUEST) {
+            if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
+                startCamera(null);
+            }
+        } else if (requestCode == GALLERY_PERMISSIONS_REQUEST) {
+            if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
+                startGalleryChooser(null);
+            }
         }
     }
 
@@ -112,7 +180,11 @@ public class SelectImageActivity extends AppCompatActivity {
 
         // Gets the image chosen by the user and start uploading it to the server
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            CloudVisionUploader.start(this, data.getData());
+            try {
+                CloudVisionUploader.start(this, copyFileFromGallery(data.getData()));
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
             toggleLoading(true);
         }
         else if(requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
@@ -126,6 +198,7 @@ public class SelectImageActivity extends AppCompatActivity {
         super.onStart();
 
         registerReceiver(uploadCompleteReceiver, new IntentFilter(CloudVisionUploader.ACTION_DONE));
+        registerReceiver(queryCompleteReceiver, new IntentFilter(RestApisConsumer.ACTION_DONE));
     }
 
     @Override
@@ -133,6 +206,7 @@ public class SelectImageActivity extends AppCompatActivity {
         super.onStop();
 
         unregisterReceiver(uploadCompleteReceiver);
+        unregisterReceiver(queryCompleteReceiver);
     }
 
     /**
@@ -196,10 +270,12 @@ public class SelectImageActivity extends AppCompatActivity {
      * @param view Mandatory to use with {@code onClick} event.
      */
     public void startGalleryChooser(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
+        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
+        }
     }
 
     /**
@@ -224,5 +300,48 @@ public class SelectImageActivity extends AppCompatActivity {
     public File getCameraFile() {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
+    }
+
+    private Uri copyFileFromGallery(Uri uri) throws IOException {
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        File outputFile = getCameraFile();
+
+        try {
+            // read this file into InputStream
+            inputStream = getContentResolver().openInputStream(uri);
+
+            // write the inputStream to a FileOutputStream
+            outputStream = new FileOutputStream(outputFile);
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+            return Uri.fromFile(outputFile);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+            return uri;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    // outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 }

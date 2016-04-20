@@ -5,29 +5,26 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-import com.google.api.services.vision.v1.model.EntityAnnotation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
+import io.github.mathiasberwig.cloudvision.data.model.LabelInfo;
+import io.github.mathiasberwig.cloudvision.presentation.activity.MainActivity;
 import io.github.mathiasberwig.cloudvision.presentation.adapter.LabelsAdapter;
 
 public class LabelsFragment extends Fragment {
+    private static final String TAG = LabelsFragment.class.getName();
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-
-    private static final int ITEM_COUNT = 10;
-
-    private List<Object> mContentItems = new ArrayList<>();
+    private List<LabelInfo> labelsInfo;
 
     public static LabelsFragment newInstance() {
         return new LabelsFragment();
@@ -35,6 +32,11 @@ public class LabelsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Get the extras from MainActivity
+        Bundle extras = ((MainActivity) getActivity()).getExtras();
+        labelsInfo = extras.getParcelableArrayList(CloudVisionUploader.EXTRA_RESULT_LABELS);
+
+        // Inflate the default layout
         return inflater.inflate(R.layout.fragment_labels, container, false);
     }
 
@@ -42,15 +44,23 @@ public class LabelsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_labels);
+        // Check if we have valid info to show
+        if (labelsInfo == null) {
+            Log.i(TAG, "labelsInfo == null");
+            return;
+        }
+
+        // Setup the RecyclerView
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_labels);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        List<EntityAnnotation> labelAnnotations = CloudVisionUploader.lastResponse.getLabelAnnotations();
-        mAdapter = new RecyclerViewMaterialAdapter(new LabelsAdapter(getString(R.string.hint_label), labelAnnotations));
+        // Setup the RecyclerView Adapter
+        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LabelsAdapter(getString(R.string.hint_label), labelsInfo));
         mRecyclerView.setAdapter(mAdapter);
 
+        // Register the RecyclerView
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 }

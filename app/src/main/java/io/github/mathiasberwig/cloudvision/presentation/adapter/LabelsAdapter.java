@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.mathiasberwig.cloudvision.R;
+import io.github.mathiasberwig.cloudvision.data.model.LabelInfo;
 
 /**
  * Adapter to use {@link RecyclerView} with {@link EntityAnnotation}. <p/>
@@ -31,12 +32,12 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      * Default constructor.
      *
      * @param hint Hint that will be shown as a card on the first item of list.
-     * @param annotations The annotations of the image.
+     * @param labelsInfo The annotations of the image.
      */
-    public LabelsAdapter(String hint, List<EntityAnnotation> annotations) {
-        this.contents = new ArrayList<>(annotations.size() + 1);
+    public LabelsAdapter(String hint, List<LabelInfo> labelsInfo) {
+        this.contents = new ArrayList<>(labelsInfo.size() + 1);
         this.contents.add(hint);
-        this.contents.addAll(annotations);
+        this.contents.addAll(labelsInfo);
     }
 
     @Override
@@ -51,8 +52,7 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        // We don't count the header (hint) here
-        return contents.size() - 1;
+        return contents.size();
     }
 
     @Override
@@ -85,14 +85,14 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case TYPE_CELL: {
                 // Set the score of recognized tag in the ProgressBar
                 final IconRoundCornerProgressBar mProgressBar = ((LabelViewHolder) holder).progressBar;
-                Float score = ((EntityAnnotation) contents.get(position)).getScore();
-                mProgressBar.setProgress(score == null ? 0 : score);
+                Float score = ((LabelInfo) contents.get(position)).getScore();
+                mProgressBar.setProgress(score);
 
                 // Set the description of recognized tag in the TextView
                 final TextView mTextView = ((LabelViewHolder) holder).txtProgress;
-                String description = ((EntityAnnotation) contents.get(position)).getDescription();
+                String description = ((LabelInfo) contents.get(position)).getDescription();
                 // Format the description to "0% - tag"
-                description = String.format(Locale.getDefault(), "%1$.0f%%  - %2$s", score == null ? 0f : score * 100, description);
+                description = String.format(Locale.getDefault(), "%1$.0f%%  - %2$s", score * 100, description);
                 mTextView.setText(description);
                 break;
             }

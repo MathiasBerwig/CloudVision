@@ -2,27 +2,30 @@ package io.github.mathiasberwig.cloudvision.presentation.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+
+import java.io.IOException;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
+import io.github.mathiasberwig.cloudvision.controller.service.RestApisConsumer;
 import io.github.mathiasberwig.cloudvision.presentation.adapter.FragmentPageAdapter;
 
 /**
- * Main Activity of application. Handles the ViewPager and respective fragments. <br>
- * Must be started with a {@link Intent} containing the extra {@link CloudVisionUploader#EXTRA_IMAGE_URI}.
- * {@link CloudVisionUploader#lastResponse} can't be null (the class {@link BatchAnnotateImagesResponse}
- * isn't serializable/parcelable, so it can't be passed as an extra).
+ * Main Activity of application. Handles the ViewPager and respective fragments.
  */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
@@ -34,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param context Context to be used to start the activity.
      */
-    public static void newInstance(Context context) {
+    public static void newInstance(Context context, Bundle extras) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtras(extras);
         context.startActivity(intent);
     }
 
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupViewPager() {
         viewPager.getViewPager().setAdapter(new FragmentPageAdapter(getSupportFragmentManager(), this));
-        viewPager.setImageDrawable(new BitmapDrawable(getResources(), CloudVisionUploader.sentImage), 500);
+        viewPager.setImageDrawable(new BitmapDrawable(getResources(), getHeaderImage()), 500);
         viewPager.getViewPager().setOffscreenPageLimit(viewPager.getViewPager().getAdapter().getCount());
         viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
     }
@@ -104,6 +108,31 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setHomeButtonEnabled(true);
+        }
+    }
+
+    /**
+     * Return data queried by {@link RestApisConsumer}
+     * using annotations found by Google Cloud Vision API.
+     *
+     * @return Extras from {@link RestApisConsumer}
+     */
+    public Bundle getExtras() {
+        return getIntent().getExtras();
+    }
+
+    /**
+     * Gets the header image from {@link CloudVisionUploader#EXTRA_IMAGE_URI}.
+     *
+     * @return Loaded bitmap or {@code null}.
+     */
+    private Bitmap getHeaderImage() {
+        try {
+            return MediaStore.Images.Media.getBitmap(this.getContentResolver(),
+                    (Uri) getExtras().getParcelable(CloudVisionUploader.EXTRA_IMAGE_URI));
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+            return null;
         }
     }
 }

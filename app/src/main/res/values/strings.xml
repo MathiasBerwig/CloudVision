@@ -30,4 +30,11 @@
     <!-- Main Activity -->
     <string name="title_hint">Hint</string>
     <string name="hint_label">Each thing detected by Computer Vision gets a tag and a score. The tag is nothing more than a label, and the score shows the similarity degree found in the picture.</string>
+    <string name="landmark_location">Location</string>
+    <string name="landmark_empty_message">Sorry, we haven\'t found any Landmark</string>
+    <string name="btn_more">More</string>
+
+    <!-- Placeholders (used just in development) -->
+    <string name="placeholder_landmark_name">Landmark Name</string>
+    <string name="placeholder_landmark_info">"The Eiffel Tower is a wrought iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower. Constructed in 1889 as the entrance to the 1889 World&apos;s Fair, it was initially criticized by some of France&apos;s leading artists and intellectuals for its design, but has become a global cultural icon of France and one of the most recognisable structures in the world."</string>
 </resources>

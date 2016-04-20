@@ -21,6 +21,7 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
@@ -32,13 +33,41 @@ import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.BitmapUtils;
+import io.github.mathiasberwig.cloudvision.data.model.LabelInfo;
+import io.github.mathiasberwig.cloudvision.data.model.LandmarkInfo;
+import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 
+/**
+ * <p>IntentService that communicates with Google Cloud Vision API. It sends an image to the REST service
+ * and gets a response with annotations about the image. </p>
+ *
+ * <p>To use this class you first need to set the {@link #CLOUD_VISION_API_KEY}.</p>
+ *
+ * <p>There is a default initializer to create a new Intent and start this IntentService, but you
+ * can personalize and create your custom call just passing the extras:
+ * <li>{@link #EXTRA_LABEL_DETECTION}</li>
+ * <li>{@link #EXTRA_LOGO_DETECTION}</li>
+ * <li>{@link #EXTRA_LANDMARK_DETECTION}</li>
+ * <li>{@link #EXTRA_IMAGE_PROPERTIES}</li>
+ * <li>{@link #EXTRA_MAX_LABELS}</li>
+ * <li>{@link #EXTRA_MAX_LOGOS}</li>
+ * <li>{@link #EXTRA_MAX_LANDMARKS}</li>
+ * <li>{@link #EXTRA_MAX_IMAGE_PROPERTIES}</li>
+ * <li>{@link #EXTRA_IMAGE_URI}</li>
+ * <li>{@link #EXTRA_IMAGE_RESIZE}</li>
+ * <li>{@link #EXTRA_IMAGE_QUALITY}</li></p>
+ *
+ * <p>The results of the query are sent as extras ({@link #EXTRA_RESULT_ERROR},
+ * {@link #EXTRA_RESULT_LABELS}, {@link #EXTRA_RESULT_LOGOS}, {@link #EXTRA_RESULT_LANDMARK}) and
+ * broadcasted with the action {@link #ACTION_DONE}.</p>
+ */
 public class CloudVisionUploader extends IntentService {
     private static final String TAG = CloudVisionUploader.class.getName();
 
     // TODO: Before you run your application, you need a Google Cloud Vision API key.
     private static final String CLOUD_VISION_API_KEY = "";
 
+    // Parameters Extras
     public static final String EXTRA_LABEL_DETECTION = "EXTRA_LABEL_DETECTION";
     public static final String EXTRA_LOGO_DETECTION = "EXTRA_LOGO_DETECTION";
     public static final String EXTRA_LANDMARK_DETECTION = "EXTRA_LANDMARK_DETECTION";
@@ -50,7 +79,27 @@ public class CloudVisionUploader extends IntentService {
     public static final String EXTRA_IMAGE_URI = "EXTRA_IMAGE_URI";
     public static final String EXTRA_IMAGE_RESIZE = "EXTRA_IMAGE_RESIZE";
     public static final String EXTRA_IMAGE_QUALITY = "EXTRA_IMAGE_QUALITY";
+
+    // Response Extras
+    /**
+     * Extra that stores a string error message, if it was trowed.
+     */
     public static final String EXTRA_RESULT_ERROR = "EXTRA_RESULT_ERROR";
+
+    /**
+     * Extra that stores a parcelable array list of {@link LabelInfo}.
+     */
+    public static final String EXTRA_RESULT_LABELS = "EXTRA_RESULT_LABELS";
+
+    /**
+     * Extra that stores a parcelable array list of {@link LogoInfo}
+     */
+    public static final String EXTRA_RESULT_LOGOS = "EXTRA_RESULT_LOGOS";
+
+    /**
+     * Extra that stores a parcelable {@link LandmarkInfo}.
+     */
+    public static final String EXTRA_RESULT_LANDMARK = "EXTRA_RESULT_LANDMARK";
 
     private static final int DEFAULT_MAX_LABELS = 5;
     private static final int DEFAULT_MAX_LOGOS = 5;
@@ -59,9 +108,6 @@ public class CloudVisionUploader extends IntentService {
     private static final int DEFAULT_IMAGE_QUALITY = 75;
 
     public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader.ACTION_DONE";
-
-    public static AnnotateImageResponse lastResponse;
-    public static Bitmap sentImage;
 
     public CloudVisionUploader() {
         super("CloudVisionUploader");
@@ -115,9 +161,6 @@ public class CloudVisionUploader extends IntentService {
             if (options.getBoolean(EXTRA_IMAGE_RESIZE)) {
                 bitmap = BitmapUtils.scaleBitmapDown(bitmap, 800);
             }
-
-            // Store the scaled (or not) image sent to CloudVision server
-            sentImage = bitmap;
 
             // Add the image
             final Image base64EncodedImage = new Image();
@@ -200,14 +243,15 @@ public class CloudVisionUploader extends IntentService {
 
             Log.d(TAG, "created Cloud Vision request object, sending request: " + batchAnnotateImagesRequest.toPrettyString());
 
-            // Store the response on a static field because BatchAnnotateImagesResponse does not
-            // implement any serialization. As we are sending just one image, the CV API will
-            // always return 1 response (or none).
-            List<AnnotateImageResponse> responses = annotateRequest.execute().getResponses();
-            lastResponse = responses != null && !responses.isEmpty() ? responses.get(0) : null;
+            final List<AnnotateImageResponse> responses = annotateRequest.execute().getResponses();
+            if (responses != null && !responses.isEmpty()) {
+                // As we are sending just one image, the CV API will always return 1 response (or none).
+                final AnnotateImageResponse response = responses.get(0);
 
-            if (lastResponse != null) {
-                Log.d(TAG, "CloudVision Response: \n" + lastResponse.toPrettyString());
+                // Prepare the extras with info about the image
+                prepareExtras(result, response);
+
+                Log.d(TAG, "CloudVision Response: \n" + response.toPrettyString());
             }
 
         } catch (FileNotFoundException e) {
@@ -223,5 +267,34 @@ public class CloudVisionUploader extends IntentService {
 
         // Broadcast the result
         sendBroadcast(result);
+    }
+
+    /**
+     * Check the {@code AnnotateImageResponse} and creates a list of {@link LabelInfo} and a
+     * {@link LandmarkInfo}, then store it on the {@code extras}.
+     *
+     * @param intent The intent where the extras will be stored.
+     * @param response The Google Cloud Vision response.
+     */
+    private void prepareExtras(Intent intent, AnnotateImageResponse response) {
+        if (response == null) return;
+
+        // Get the Logos Annotations
+        final List<EntityAnnotation> labelsAnnotations = response.getLabelAnnotations();
+
+        // Check if any label was detected in the image then store it on the extras
+        if (labelsAnnotations != null && !labelsAnnotations.isEmpty()) {
+            ArrayList<LabelInfo> labelsInfo = LabelInfo.createListFromAnnotations(labelsAnnotations);
+            intent.putExtra(EXTRA_RESULT_LABELS, labelsInfo);
+        }
+
+        // Get the Landmark Annotations
+        final List<EntityAnnotation> landmarkAnnotations = response.getLandmarkAnnotations();
+
+        // Check if any landmark was found in the image then store it on the extras
+        if (landmarkAnnotations != null && !landmarkAnnotations.isEmpty()) {
+            LandmarkInfo landmarkInfo = LandmarkInfo.createFromAnnotation(landmarkAnnotations.get(0));
+            intent.putExtra(EXTRA_RESULT_LANDMARK, landmarkInfo);
+        }
     }
 }
