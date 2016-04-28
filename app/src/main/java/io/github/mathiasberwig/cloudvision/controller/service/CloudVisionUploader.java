@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -266,7 +267,7 @@ public class CloudVisionUploader extends IntentService {
         }
 
         // Broadcast the result
-        sendBroadcast(result);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(result);
     }
 
     /**

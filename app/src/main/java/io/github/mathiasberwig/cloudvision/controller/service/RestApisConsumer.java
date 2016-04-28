@@ -2,6 +2,7 @@ package io.github.mathiasberwig.cloudvision.controller.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -91,7 +92,7 @@ public class RestApisConsumer extends IntentService {
         }
 
         // Send the broadcast
-        sendBroadcast(broadcast);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
     }
 
     /**

@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -104,7 +105,7 @@ public class SelectImageActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Start MainActivity with the info returned from Google Cloud Vision and third-party APIs
-            MainActivity.newInstance(context, intent.getExtras());
+            MainActivity.newInstance(SelectImageActivity.this, intent.getExtras());
 
             // Disable loading animation
             toggleLoading(false);
@@ -197,16 +198,18 @@ public class SelectImageActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        registerReceiver(uploadCompleteReceiver, new IntentFilter(CloudVisionUploader.ACTION_DONE));
-        registerReceiver(queryCompleteReceiver, new IntentFilter(RestApisConsumer.ACTION_DONE));
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(uploadCompleteReceiver, new IntentFilter(CloudVisionUploader.ACTION_DONE));
+        lbm.registerReceiver(queryCompleteReceiver, new IntentFilter(RestApisConsumer.ACTION_DONE));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        unregisterReceiver(uploadCompleteReceiver);
-        unregisterReceiver(queryCompleteReceiver);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(uploadCompleteReceiver);
+        lbm.unregisterReceiver(queryCompleteReceiver);
     }
 
     /**
