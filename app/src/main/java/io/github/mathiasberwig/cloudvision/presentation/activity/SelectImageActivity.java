@@ -302,6 +302,14 @@ public class SelectImageActivity extends AppCompatActivity {
         return new File(dir, FILE_NAME);
     }
 
+    /**
+     * Copy the file specified in the {@code uri} parameter to a new file on {@link Environment#DIRECTORY_PICTURES}
+     * with {@link #FILE_NAME} (as get from{@link #getCameraFile()}).
+     *
+     * @param uri The Uri of the gallery file.
+     * @return The Uri where the file was stored.
+     * @throws IOException
+     */
     private Uri copyFileFromGallery(Uri uri) throws IOException {
 
         InputStream inputStream = null;
