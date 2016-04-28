@@ -274,7 +274,7 @@ public class SelectImageActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a photo"), GALLERY_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.title_gallery_chooser)), GALLERY_IMAGE_REQUEST);
         }
     }
 

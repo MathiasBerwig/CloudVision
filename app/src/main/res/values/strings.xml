@@ -26,6 +26,7 @@
         <item>Collecting medicinal herbs</item>
         <item>Calibrating thrusters</item>
     </string-array>
+    <string name="title_gallery_chooser">Select a photo</string>
 
     <!-- Main Activity -->
     <string name="title_hint">Hint</string>
