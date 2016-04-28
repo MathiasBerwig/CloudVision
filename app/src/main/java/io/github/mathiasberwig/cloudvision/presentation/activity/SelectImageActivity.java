@@ -69,6 +69,7 @@ public class SelectImageActivity extends AppCompatActivity {
 
             // Error uploading image or retrieving data from Google Cloud Vision
             if (intent.hasExtra(CloudVisionUploader.EXTRA_RESULT_ERROR)) {
+                // TODO: Replace Toast with a EmptyView showing the Error Message
                 // Show Toast with the error
                 Toast.makeText(SelectImageActivity.this,
                         intent.getStringExtra(CloudVisionUploader.EXTRA_RESULT_ERROR),
@@ -76,8 +77,6 @@ public class SelectImageActivity extends AppCompatActivity {
 
                 // Disable loading animation
                 toggleLoading(false);
-
-                // TODO: Show EmptyView with Error Message
             } else
 
             // CloudVision haven't returned enough data
@@ -85,13 +84,11 @@ public class SelectImageActivity extends AppCompatActivity {
                 // Disable loading animation
                 toggleLoading(false);
 
+                // TODO: Replace Toast with a EmptyView showing that nothing was found
                 // Show Toast with the error
                 Toast.makeText(SelectImageActivity.this,
                         "Empty View",
                         Toast.LENGTH_LONG).show();
-
-                // TODO: Show EmptyView
-                Log.d(TAG, "onReceive: empty view");
             }
         }
     };
