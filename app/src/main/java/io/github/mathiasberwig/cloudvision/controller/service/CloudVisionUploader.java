@@ -1,14 +1,14 @@
 package io.github.mathiasberwig.cloudvision.controller.service;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -29,11 +29,11 @@ import com.google.api.services.vision.v1.model.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
-import io.github.mathiasberwig.cloudvision.controller.BitmapUtils;
 import io.github.mathiasberwig.cloudvision.data.model.LabelInfo;
 import io.github.mathiasberwig.cloudvision.data.model.LandmarkInfo;
 import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
@@ -55,7 +55,6 @@ import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
  * <li>{@link #EXTRA_MAX_LANDMARKS}</li>
  * <li>{@link #EXTRA_MAX_IMAGE_PROPERTIES}</li>
  * <li>{@link #EXTRA_IMAGE_URI}</li>
- * <li>{@link #EXTRA_IMAGE_RESIZE}</li>
  * <li>{@link #EXTRA_IMAGE_QUALITY}</li></p>
  *
  * <p>The results of the query are sent as extras ({@link #EXTRA_RESULT_ERROR},
@@ -78,7 +77,6 @@ public class CloudVisionUploader extends IntentService {
     public static final String EXTRA_MAX_LANDMARKS = "EXTRA_MAX_LANDMARKS";
     public static final String EXTRA_MAX_IMAGE_PROPERTIES = "EXTRA_MAX_IMAGE_PROPERTIES";
     public static final String EXTRA_IMAGE_URI = "EXTRA_IMAGE_URI";
-    public static final String EXTRA_IMAGE_RESIZE = "EXTRA_IMAGE_RESIZE";
     public static final String EXTRA_IMAGE_QUALITY = "EXTRA_IMAGE_QUALITY";
 
     // Response Extras
@@ -102,6 +100,7 @@ public class CloudVisionUploader extends IntentService {
      */
     public static final String EXTRA_RESULT_LANDMARK = "EXTRA_RESULT_LANDMARK";
 
+    // Default values
     private static final int DEFAULT_MAX_LABELS = 5;
     private static final int DEFAULT_MAX_LOGOS = 5;
     private static final int DEFAULT_MAX_LANDMARKS = 1;
@@ -126,7 +125,6 @@ public class CloudVisionUploader extends IntentService {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         intent.putExtra(EXTRA_IMAGE_URI, image);
-        intent.putExtra(EXTRA_IMAGE_RESIZE, sp.getBoolean(EXTRA_IMAGE_RESIZE, true));
         intent.putExtra(EXTRA_IMAGE_QUALITY, sp.getInt(EXTRA_IMAGE_QUALITY, DEFAULT_IMAGE_QUALITY));
         intent.putExtra(EXTRA_LABEL_DETECTION, sp.getBoolean(EXTRA_LABEL_DETECTION, true));
         intent.putExtra(EXTRA_LOGO_DETECTION, sp.getBoolean(EXTRA_LOGO_DETECTION, true));
@@ -156,12 +154,19 @@ public class CloudVisionUploader extends IntentService {
 
         try {
             // Get the Bitmap from intent
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), (Uri) options.getParcelable(EXTRA_IMAGE_URI));
+            final Uri imageUri = options.getParcelable(EXTRA_IMAGE_URI);
+            if (imageUri == null) throw new FileNotFoundException();
 
-            // Scale down the image
-            if (options.getBoolean(EXTRA_IMAGE_RESIZE)) {
-                bitmap = BitmapUtils.scaleBitmapDown(bitmap, 800);
-            }
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
+            bmpOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpOptions);
+
+            // Find the correct scale value (It should be the power of 2) then decode bitmap with
+            // inSampleSize set
+            bmpOptions.inSampleSize = calculateInSampleSize(bmpOptions, 1000, 1000);
+            bmpOptions.inJustDecodeBounds = false;
+            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpOptions);
 
             // Add the image
             final Image base64EncodedImage = new Image();
@@ -172,7 +177,14 @@ public class CloudVisionUploader extends IntentService {
             // Convert the bitmap to a JPEG
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, imageQuality, byteArrayOutputStream);
+            bitmap.recycle();
+
+            // Write the compressed image back to file
+            writeToFile(byteArrayOutputStream, imageUri);
+
+            // Convert the output stream to a byte array
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
+            byteArrayOutputStream.close();
 
             // Base64 encode the JPEG
             base64EncodedImage.encodeContent(imageBytes);
@@ -297,5 +309,58 @@ public class CloudVisionUploader extends IntentService {
             LandmarkInfo landmarkInfo = LandmarkInfo.createFromAnnotation(landmarkAnnotations.get(0));
             intent.putExtra(EXTRA_RESULT_LANDMARK, landmarkInfo);
         }
+    }
+
+    /**
+     * Write a {@link ByteArrayOutputStream} to a {@link java.io.File} from an {@link Uri}.
+     *
+     * @param byteArrayOutputStream The data that will be write to file.
+     * @param outputFile The Uri to the output file.
+     * @throws IOException
+     */
+    private void writeToFile(ByteArrayOutputStream byteArrayOutputStream, Uri outputFile) throws IOException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = getContentResolver().openOutputStream(outputFile);
+            byteArrayOutputStream.writeTo(outputStream);
+        }
+        finally {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
+
+    /**
+     * Gets the height and width of the image from {@code options} then calculate the largest
+     * inSampleSize value that is a power of 2 and keeps both height and width larger than the
+     * requested height and width.
+     *
+     * @see <a href="http://developer.android.com/intl/pt-br/training/displaying-bitmaps/load-bitmap.html#load-bitmap">
+     *     Android Developers: Loading Large Bitmaps Efficiently</a>
+     * @param options Options that will be used to decode the image.
+     * @param reqWidth The requested width.
+     * @param reqHeight The requested height.
+     * @return The best scale value (power of 2).
+     */
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
