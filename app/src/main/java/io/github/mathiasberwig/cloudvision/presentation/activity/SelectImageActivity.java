@@ -330,7 +330,7 @@ public class SelectImageActivity extends AppCompatActivity {
                 outputStream.write(bytes, 0, read);
             }
             return Uri.fromFile(outputFile);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             Log.e(TAG, e.getMessage(), e);
             return uri;
         } finally {
@@ -338,17 +338,15 @@ public class SelectImageActivity extends AppCompatActivity {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
             if (outputStream != null) {
                 try {
-                    // outputStream.flush();
                     outputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(), e);
                 }
-
             }
         }
     }
