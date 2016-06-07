@@ -270,11 +270,15 @@ public class SelectImageActivity extends AppCompatActivity {
      * @param view Mandatory to use with {@code onClick} event.
      */
     public void startGalleryChooser(View view) {
-        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Log.d(TAG, "startGalleryChooser: app does have permissions");
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.title_gallery_chooser)), GALLERY_IMAGE_REQUEST);
+        } else {
+            Log.d(TAG, "startGalleryChooser: app doesn't have permissions");
         }
     }
 
@@ -285,21 +289,25 @@ public class SelectImageActivity extends AppCompatActivity {
      * @param view Mandatory to use with {@code onClick} event.
      */
     public void startCamera(View view) {
-        if (PermissionUtils.requestPermission(this, CAMERA_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+        if (PermissionUtils.requestPermission(this, CAMERA_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA)) {
+            Log.d(TAG, "startCamera: app does have permissions");
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
             startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+        } else {
+            Log.d(TAG, "startCamera: app doesn't have permissions");
         }
     }
 
     /**
      * Gets a new file to store the image taken with {@link #startCamera(View)} method.
      *
-     * @return new file on {@link Environment#DIRECTORY_PICTURES} with {@link #FILE_NAME}.
+     * @return new file on the app's directory with {@link #FILE_NAME}.
      */
     public File getCameraFile() {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        return new File(dir, FILE_NAME);
+        return new File(getFilesDir(), FILE_NAME);
     }
 
     /**
