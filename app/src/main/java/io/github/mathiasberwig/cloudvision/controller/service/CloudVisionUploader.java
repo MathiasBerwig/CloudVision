@@ -292,7 +292,7 @@ public class CloudVisionUploader extends IntentService {
     private void prepareExtras(Intent intent, AnnotateImageResponse response) {
         if (response == null) return;
 
-        // Get the Logos Annotations
+        // Get the Labels Annotations
         final List<EntityAnnotation> labelsAnnotations = response.getLabelAnnotations();
 
         // Check if any label was detected in the image then store it on the extras
