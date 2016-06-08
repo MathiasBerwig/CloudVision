@@ -35,6 +35,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".presentation.activity.IntroActivity" />
+
         <activity
             android:name=".presentation.activity.MainActivity"
             android:label="@string/title_activity_main"
@@ -43,10 +45,8 @@
         <service
             android:name=".controller.service.CloudVisionUploader"
             android:exported="false" />
-
         <service
             android:name=".controller.service.RestApisConsumer"
             android:exported="false"/>
     </application>
-
 </manifest>

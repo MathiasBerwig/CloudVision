@@ -85,6 +85,11 @@ dependencies {
      */
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
 
+    /**
+     * AppIntro
+     */
+    compile 'com.github.paolorotolo:appintro:4.0.0'
+
     configurations {
         compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
     }
