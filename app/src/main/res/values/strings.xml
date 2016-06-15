@@ -33,6 +33,7 @@
     <string name="hint_label">Each thing detected by Cloud Vision API gets a tag and a score. The tag is nothing more than a label, and the score shows the similarity degree found in the picture.</string>
     <string name="landmark_location">Location</string>
     <string name="landmark_empty_message">Sorry, we haven\'t found any Landmark</string>
+    <string name="wikipedia_powered">Powered by Wikipedia</string>
     <string name="btn_more">More</string>
 
     <!-- Placeholders (used just in development) -->
