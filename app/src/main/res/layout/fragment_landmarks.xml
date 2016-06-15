@@ -13,7 +13,7 @@
         <include layout="@layout/material_view_pager_placeholder"/>
 
         <!-- Landmark Info Card -->
-        <include layout="@layout/fragment_card_landmark_info"/>
+        <include layout="@layout/fragment_card_wiki_article_info"/>
 
         <!-- Landmark Map Card -->
         <include layout="@layout/fragment_card_landmark_map"/>
