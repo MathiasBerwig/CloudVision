@@ -17,7 +17,7 @@ import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.data.model.LabelInfo;
 
 /**
- * Adapter to use {@link RecyclerView} with {@link EntityAnnotation}. <p/>
+ * Adapter to use {@link RecyclerView} with {@link LabelInfo}. <p/>
  *
  * Created by MathiasBerwig on 12/04/16.
  */
