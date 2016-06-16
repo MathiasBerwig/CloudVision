@@ -164,30 +164,10 @@ public class RestApisConsumer extends IntentService {
     private WikiArticleInfo queryInfoFromWikipedia(String articleNameInEnglish, int maxSentences) {
         final Locale deviceLocale = Locale.getDefault();
 
-        // The URL that will be used to request info
-        String urlToParse;
-
-        // The name of the article
-        String articleName = null;
-
-        // Compare the device's language with English and then set the article name that will be queried
-        if (deviceLocale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
-            articleName = articleNameInEnglish;
-        } else {
-            articleName = queryArticleTitleWikipedia(articleNameInEnglish, deviceLocale);
-        }
-
-        // Check if an article name was found in the user's language, then set  the URL of the Wikipedia's API
-        if (articleName != null) {
-            urlToParse = getWikipediasApiUrl(deviceLocale);
-        } else {
-            // Article wasn't found by queryArticleTitleWikipedia() method
-            articleName = articleNameInEnglish;
-            urlToParse = getWikipediasApiUrl(Locale.ENGLISH);
-        }
+        WikipediaQueryRequest qryRequest = new WikipediaQueryRequest().get(articleNameInEnglish, deviceLocale);
 
         // Build the request to query extracted text from the article on the user's locale or English
-        final HttpUrl url = HttpUrl.parse(urlToParse)
+        final HttpUrl url = HttpUrl.parse(qryRequest.wikipediaApiUrl)
                 .newBuilder()
                 .addQueryParameter("action", "query")
                 .addQueryParameter("format", "json")
@@ -197,7 +177,7 @@ public class RestApisConsumer extends IntentService {
                 .addQueryParameter("exsectionformat", "plain")
                 .addQueryParameter("exintro", "1")
                 .addQueryParameter("explaintext", "1")
-                .addQueryParameter("titles", articleName)
+                .addQueryParameter("titles", qryRequest.articleName)
                 .build();
 
         // Build the request
@@ -210,7 +190,7 @@ public class RestApisConsumer extends IntentService {
             // De-serialize the response
             WikiArticleInfo wai = gson.fromJson(response.body().string(), WikiArticleInfo.class);
             // Add the Wikipedia Article URL to response
-            wai.wikipediaArticleUrl = getWikipediasWikiUrl(deviceLocale, articleName);
+            wai.wikipediaArticleUrl = qryRequest.wikipediaWikIUrl;
             // Return the response
             return wai;
 
@@ -274,5 +254,41 @@ public class RestApisConsumer extends IntentService {
      */
     private static String getWikipediasWikiUrl(Locale locale, String articleName) {
         return String.format(WIKIPEDIA_WIKI_BASE_URL, locale.getLanguage(), articleName);
+    }
+
+    private class WikipediaQueryRequest {
+        String articleName;
+        String wikipediaApiUrl;
+        String wikipediaWikIUrl;
+        Locale queryLocale;
+
+        WikipediaQueryRequest get(String articleNameInEnglish, Locale locale) {
+            // Compare the device's language with English and then set the article name that will be queried
+            if (!locale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
+                articleName = queryArticleTitleWikipedia(articleNameInEnglish, locale);
+                wikipediaApiUrl = getWikipediasApiUrl(locale);
+                wikipediaWikIUrl = getWikipediasWikiUrl(locale, articleName);
+                queryLocale = locale;
+            }
+
+            if (articleName == null || wikipediaApiUrl == null) {
+                articleName = articleNameInEnglish;
+                wikipediaApiUrl = getWikipediasApiUrl(Locale.ENGLISH);
+                wikipediaWikIUrl = getWikipediasWikiUrl(Locale.ENGLISH, articleName);
+                queryLocale = Locale.ENGLISH;
+            }
+
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return "WikipediaQueryRequest{" +
+                    "articleName='" + articleName + '\'' +
+                    ", wikipediaApiUrl='" + wikipediaApiUrl + '\'' +
+                    ", wikipediaWikIUrl='" + wikipediaWikIUrl + '\'' +
+                    ", queryLocale=" + queryLocale +
+                    '}';
+        }
     }
 }
