@@ -43,9 +43,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/wikipedia_powered"
             android:id="@+id/txt_wikipedia_powered"
-            android:layout_alignTop="@+id/btn_landmark_info_more"
+            android:layout_alignTop="@+id/btn_open_in_wikipedia"
             android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/btn_landmark_info_more"
+            android:layout_alignBottom="@+id/btn_open_in_wikipedia"
             android:textAlignment="center"
             android:drawableStart="@drawable/ic_wikipedia_grey_24dp"
             android:gravity="center_vertical"
@@ -55,7 +55,7 @@
             android:textSize="12sp" />
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_landmark_info_more"
+            android:id="@+id/btn_open_in_wikipedia"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

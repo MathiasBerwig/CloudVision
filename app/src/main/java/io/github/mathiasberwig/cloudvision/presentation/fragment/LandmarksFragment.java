@@ -102,7 +102,7 @@ public class LandmarksFragment extends Fragment implements OnMapReadyCallback {
     private void findInfoViews(View v) {
         txtLandmarkName = (TextView) v.findViewById(R.id.txt_article_name);
         txtLandmarkDescription = (TextView) v.findViewById(R.id.txt_article_description);
-        btnLandmarkInfoMore = (AppCompatButton) v.findViewById(R.id.btn_landmark_info_more);
+        btnLandmarkInfoMore = (AppCompatButton) v.findViewById(R.id.btn_open_in_wikipedia);
         mapLandmarkLocation = (MapView) v.findViewById(R.id.map_landmark_location);
     }
 
