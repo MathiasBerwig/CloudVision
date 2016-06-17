@@ -14,8 +14,8 @@
     <!-- Main Activity -->
     <string name="title_activity_main">Cloud Vision Demo</string>
     <string name="title_tab_labels">Labels</string>
-    <string name="title_tab_logos">Logos</string>
-    <string name="title_tab_landmarks">Landmarks</string>
+    <string name="title_tab_logos">Logo</string>
+    <string name="title_tab_landmarks">Landmark</string>
     <string name="title_tab_default">Dumb</string>
     
     <!-- Select Image Fragment -->

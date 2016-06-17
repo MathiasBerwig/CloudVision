@@ -25,8 +25,8 @@ import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploade
 import io.github.mathiasberwig.cloudvision.data.model.LandmarkInfo;
 import io.github.mathiasberwig.cloudvision.presentation.activity.MainActivity;
 
-public class LandmarksFragment extends Fragment implements OnMapReadyCallback {
-    private static final String TAG = LandmarksFragment.class.getName();
+public class LandmarkFragment extends Fragment implements OnMapReadyCallback {
+    private static final String TAG = LandmarkFragment.class.getName();
 
     // UI References
     private TextView txtLandmarkName;
@@ -49,8 +49,8 @@ public class LandmarksFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
-    public static LandmarksFragment newInstance() {
-        return new LandmarksFragment();
+    public static LandmarkFragment newInstance() {
+        return new LandmarkFragment();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LandmarksFragment extends Fragment implements OnMapReadyCallback {
 
         // Inflate the default layout or EmptyView
         return inflater.inflate(landmarkInfo == null ?
-                R.layout.fragment_view_pager_empty : R.layout.fragment_landmarks, container, false);
+                R.layout.fragment_view_pager_empty : R.layout.fragment_landmark, container, false);
     }
 
     @Override

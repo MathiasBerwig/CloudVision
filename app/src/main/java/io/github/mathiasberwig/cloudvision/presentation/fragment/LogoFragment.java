@@ -17,16 +17,16 @@ import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
 import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 import io.github.mathiasberwig.cloudvision.presentation.activity.MainActivity;
-import io.github.mathiasberwig.cloudvision.presentation.adapter.LogosAdapter;
+import io.github.mathiasberwig.cloudvision.presentation.adapter.LogoAdapter;
 
 
-public class LogosFragment extends Fragment {
-    private static final String TAG = LogosFragment.class.getName();
+public class LogoFragment extends Fragment {
+    private static final String TAG = LogoFragment.class.getName();
 
     private LogoInfo logosInfo;
 
-    public static LogosFragment newInstance() {
-        return new LogosFragment();
+    public static LogoFragment newInstance() {
+        return new LogoFragment();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class LogosFragment extends Fragment {
 
         // Inflate the default layout or Empty View
         return inflater.inflate(logosInfo == null ?
-                R.layout.fragment_view_pager_empty : R.layout.fragment_logos, container, false);
+                R.layout.fragment_view_pager_empty : R.layout.fragment_logo, container, false);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LogosFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
-        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LogosAdapter(logosInfo));
+        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LogoAdapter(logosInfo));
         mRecyclerView.setAdapter(mAdapter);
 
         // Register the RecyclerView

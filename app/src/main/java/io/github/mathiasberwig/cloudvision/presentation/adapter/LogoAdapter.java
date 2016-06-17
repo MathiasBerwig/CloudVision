@@ -17,14 +17,14 @@ import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
  *
  * Created by mathias.berwig on 16/06/2016.
  */
-public class LogosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LogoInfo content;
 
     static final int TYPE_DESCRIPTION = 0;
     static final int TYPE_CELL = 1;
 
-    public LogosAdapter(LogoInfo logoInfo) {
+    public LogoAdapter(LogoInfo logoInfo) {
         this.content = logoInfo;
     }
 
@@ -47,6 +47,9 @@ public class LogosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_card_wiki_article_info, parent, false);
                 return new DescriptionViewHolder(view) {};
             }
+            case TYPE_CELL: {
+
+            }
         }
         return null;
     }
@@ -59,6 +62,10 @@ public class LogosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 ((DescriptionViewHolder) holder).txtArticleName.setText(content.getBrandName());
                 ((DescriptionViewHolder) holder).txtArticleDescription.setText(content.getDescription());
                 ((DescriptionViewHolder) holder).btnArticleInfoMore.setOnClickListener(this.btnBrandInfoMoreOnClick);
+                break;
+            }
+            case TYPE_CELL: {
+
                 break;
             }
         }

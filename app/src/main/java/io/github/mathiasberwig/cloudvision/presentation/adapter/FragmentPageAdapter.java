@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LabelsFragment;
-import io.github.mathiasberwig.cloudvision.presentation.fragment.LandmarksFragment;
-import io.github.mathiasberwig.cloudvision.presentation.fragment.LogosFragment;
+import io.github.mathiasberwig.cloudvision.presentation.fragment.LandmarkFragment;
+import io.github.mathiasberwig.cloudvision.presentation.fragment.LogoFragment;
 
 /**
  * Fragment Page Adapter that holds MainActivity fragment pages. <p/>
@@ -40,8 +40,8 @@ public class FragmentPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: return LabelsFragment.newInstance();
-            case 1: return LogosFragment.newInstance();
-            case 2: return LandmarksFragment.newInstance();
+            case 1: return LogoFragment.newInstance();
+            case 2: return LandmarkFragment.newInstance();
             default: return null;
         }
     }
