@@ -58,7 +58,7 @@ import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
  * <li>{@link #EXTRA_IMAGE_QUALITY}</li></p>
  *
  * <p>The results of the query are sent as extras ({@link #EXTRA_RESULT_ERROR},
- * {@link #EXTRA_RESULT_LABELS}, {@link #EXTRA_RESULT_LOGOS}, {@link #EXTRA_RESULT_LANDMARK}) and
+ * {@link #EXTRA_RESULT_LABELS}, {@link #EXTRA_RESULT_LOGO}, {@link #EXTRA_RESULT_LANDMARK}) and
  * broadcasted with the action {@link #ACTION_DONE}.</p>
  */
 public class CloudVisionUploader extends IntentService {
@@ -93,7 +93,7 @@ public class CloudVisionUploader extends IntentService {
     /**
      * Extra that stores a parcelable array list of {@link LogoInfo}
      */
-    public static final String EXTRA_RESULT_LOGOS = "EXTRA_RESULT_LOGOS";
+    public static final String EXTRA_RESULT_LOGO = "EXTRA_RESULT_LOGO";
 
     /**
      * Extra that stores a parcelable {@link LandmarkInfo}.
@@ -299,6 +299,15 @@ public class CloudVisionUploader extends IntentService {
         if (labelsAnnotations != null && !labelsAnnotations.isEmpty()) {
             ArrayList<LabelInfo> labelsInfo = LabelInfo.createListFromAnnotations(labelsAnnotations);
             intent.putExtra(EXTRA_RESULT_LABELS, labelsInfo);
+        }
+
+        // Get the Logos Annotations
+        final List<EntityAnnotation> logosAnnotations = response.getLogoAnnotations();
+
+        // Check if any logo was detected in the image then store it on the extras
+        if (logosAnnotations != null && !logosAnnotations.isEmpty()) {
+            LogoInfo logoInfo = LogoInfo.createFromAnnotation(logosAnnotations.get(0));
+            intent.putExtra(EXTRA_RESULT_LOGO, logoInfo);
         }
 
         // Get the Landmark Annotations

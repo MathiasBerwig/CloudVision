@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.github.mathiasberwig.cloudvision.data.model.LandmarkInfo;
+import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 import io.github.mathiasberwig.cloudvision.data.model.pojo.FormattedAddress;
 import io.github.mathiasberwig.cloudvision.data.model.pojo.WikiArticleInfo;
 import okhttp3.HttpUrl;
@@ -91,6 +92,17 @@ public class RestApisConsumer extends IntentService {
             broadcast.putExtra(CloudVisionUploader.EXTRA_RESULT_LANDMARK, landmarkInfo);
         }
 
+        // Check if the service should query info about a logo
+        if (intent.hasExtra(CloudVisionUploader.EXTRA_RESULT_LOGO)) {
+            // Get the logo info from extra
+            LogoInfo logoInfo = intent.getParcelableExtra(CloudVisionUploader.EXTRA_RESULT_LOGO);
+
+            // Query the brand info from Wikipedia's API
+            queryBrandInfoFromWikipedia(logoInfo, DEFAULT_WIKIPEDIA_MAX_SENTENCES);
+
+            broadcast.putExtra(CloudVisionUploader.EXTRA_RESULT_LOGO, logoInfo);
+        }
+
         // Send the broadcast
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
     }
@@ -113,6 +125,18 @@ public class RestApisConsumer extends IntentService {
             landmarkInfo.setName(wikiArticleInfo.getTitle());
             landmarkInfo.setDescription(wikiArticleInfo.getExtract());
             landmarkInfo.setWikipediaArticleUrl(wikiArticleInfo.wikipediaArticleUrl);
+        }
+    }
+
+    private void queryBrandInfoFromWikipedia(LogoInfo logoInfo, int maxSentences) {
+
+        // Query info about the brand from Wikipedia
+        final WikiArticleInfo wikiArticleInfo = queryInfoFromWikipedia(logoInfo.getBrandName(), maxSentences);
+
+        if (wikiArticleInfo != null) {
+            logoInfo.setBrandName(wikiArticleInfo.getTitle());
+            logoInfo.setDescription(wikiArticleInfo.getExtract());
+            logoInfo.setWikipediaArticleUrl(wikiArticleInfo.wikipediaArticleUrl);
         }
     }
 
