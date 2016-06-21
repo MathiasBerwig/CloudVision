@@ -57,7 +57,7 @@ public class LogoFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
-        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LogoAdapter(logosInfo));
+        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LogoAdapter(LogoFragment.this, logosInfo));
         mRecyclerView.setAdapter(mAdapter);
 
         // Register the RecyclerView

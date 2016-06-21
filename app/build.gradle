@@ -91,6 +91,16 @@ dependencies {
      */
     compile 'com.github.paolorotolo:appintro:4.0.0'
 
+    /**
+     * Glide
+     */
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    /**
+     * AndroidSVG
+     */
+    compile group: 'com.caverock', name: 'androidsvg', version: '1.2.1'
+
     configurations {
         compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
     }

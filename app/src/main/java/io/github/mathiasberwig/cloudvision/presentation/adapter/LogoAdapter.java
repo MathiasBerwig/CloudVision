@@ -1,7 +1,9 @@
 package io.github.mathiasberwig.cloudvision.presentation.adapter;
 
 import android.content.Intent;
+import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +13,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.StreamEncoder;
+import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
+import com.caverock.androidsvg.SVG;
+
+import java.io.InputStream;
+
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.data.model.EntityProperty;
 import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
+import io.github.mathiasberwig.cloudvision.presentation.decoder.SvgDecoder;
+import io.github.mathiasberwig.cloudvision.presentation.decoder.SvgDrawableTranscoder;
+import io.github.mathiasberwig.cloudvision.presentation.decoder.SvgSoftwareLayerSetter;
 
 /**
  * Adapter to use {@link RecyclerView} with {@link LogoInfo}.
@@ -23,20 +37,30 @@ import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LogoInfo content;
+    private Fragment fragment;
+
+    /**
+     * {@code true} if the {@link #content LogoInfo} has a logo URL.
+     */
+    private boolean hasLogo;
 
     static final int TYPE_DESCRIPTION = 0;
     static final int TYPE_CELL = 1;
+    static final int TYPE_LOGO = 2;
 
-    public LogoAdapter(LogoInfo logoInfo) {
+    public LogoAdapter(Fragment fragment, LogoInfo logoInfo) {
+        this.fragment = fragment;
         this.content = logoInfo;
+        this.hasLogo = content.getLogoUrl() != null && !content.getLogoUrl().trim().isEmpty();
     }
 
     @Override
     public int getItemViewType(int position) {
-        // We should use instance of operator to determine the type of view, but the hint will
-        // always be the first, so we can code it this way
+        // The first item is always the description; and the last is the logo. The items in the middle
+        // are properties (cells).
         switch (position) {
             case 0: return TYPE_DESCRIPTION;
+            case 1: return hasLogo ? TYPE_LOGO : TYPE_CELL;
             default: return TYPE_CELL;
         }
     }
@@ -54,6 +78,10 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_card_brand_property, parent, false);
                 return new BrandPropertyViewHolder(view) {};
             }
+            case TYPE_LOGO: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_card_logo_image, parent, false);
+                return new LogoPropertyViewHolder(view) {};
+            }
         }
         return null;
     }
@@ -69,7 +97,7 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             }
             case TYPE_CELL: {
-                EntityProperty prop = content.getProperties().get(position - 1);
+                EntityProperty prop = content.getProperties().get(position - (hasLogo ? 2 : 1));
                 // Set the icon, property name and value then, if exists, a OnClickListener
                 ((BrandPropertyViewHolder) holder).imgPropertyIcon.setImageResource(prop.getIcon());
                 ((BrandPropertyViewHolder) holder).txtPropertyTitle.setText(prop.getName());
@@ -79,13 +107,43 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
                 break;
             }
+            case TYPE_LOGO: {
+                final Uri uri = Uri.parse(content.getLogoUrl());
+                prepareImageViewWithGlide((LogoPropertyViewHolder) holder, uri);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        // Each property is a cell + the description
-        return content.getProperties().size() + 1;
+        // Each property is a cell + the description + logo (1 if it exists, else 0)
+        return content.getProperties().size() + 1 + (hasLogo ? 1 : 0);
+    }
+
+    private void prepareImageViewWithGlide(LogoPropertyViewHolder holder, Uri uri) {
+        boolean svg = content.getLogoUrl().endsWith(".svg");
+
+        GenericRequestBuilder requestBuilder = null;
+
+        // TODO: A placeholder would be cool here, right?
+        // https://futurestud.io/blog/glide-placeholders-fade-animations
+        if (svg) {
+            requestBuilder = Glide.with(fragment)
+                    .using(Glide.buildStreamModelLoader(Uri.class, fragment.getContext()), InputStream.class)
+                    .from(Uri.class)
+                    .as(SVG.class)
+                    .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
+                    .sourceEncoder(new StreamEncoder())
+                    .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE) // SVG cannot be serialized so it's not worth to cache it
+                    .listener(new SvgSoftwareLayerSetter<Uri>())
+                    .decoder(new SvgDecoder());
+        } else {
+            requestBuilder = Glide.with(fragment).from(Uri.class);
+        }
+
+        //noinspection unchecked
+        requestBuilder.animate(android.R.anim.fade_in).load(uri).into(holder.imgPropertyLogo);
     }
 
     /**
@@ -122,6 +180,18 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imgPropertyIcon = (ImageView) v.findViewById(R.id.img_property_icon);
             txtPropertyTitle = (TextView) v.findViewById(R.id.txt_property_title);
             txtPropertyValue = (TextView) v.findViewById(R.id.txt_property_value);
+        }
+    }
+
+    /**
+     * ViewHolder to store an {@link ImageView} that will show the logo of a brand.
+     */
+    public static class LogoPropertyViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgPropertyLogo;
+
+        public LogoPropertyViewHolder(View v) {
+            super(v);
+            imgPropertyLogo = (ImageView) v.findViewById(R.id.img_property_logo);
         }
     }
 
