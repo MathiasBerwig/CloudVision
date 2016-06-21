@@ -17,6 +17,7 @@ import io.github.mathiasberwig.cloudvision.data.model.LandmarkInfo;
 import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 import io.github.mathiasberwig.cloudvision.data.model.pojo.FormattedAddress;
 import io.github.mathiasberwig.cloudvision.data.model.pojo.WikiArticleInfo;
+import io.github.mathiasberwig.cloudvision.data.model.pojo.WikiDataBrandInfo;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,6 +48,11 @@ public class RestApisConsumer extends IntentService {
     private static final String WIKIPEDIA_WIKI_BASE_URL = "https://%s.wikipedia.org/wiki/%s";
 
     /**
+     * The URL of Wikidata's API.
+     */
+    private static final String WIKIDATA_API_BASE_URL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
+
+    /**
      * The max sentences queried from Wikipedia's API on extract actions.
      */
     public static final int DEFAULT_WIKIPEDIA_MAX_SENTENCES = 4;
@@ -63,9 +69,11 @@ public class RestApisConsumer extends IntentService {
         super(TAG);
 
         // Instantiate the OkHttp Client
+        // The queries that uses computer vision and big data queries can easily exceed the default
+        // timeouts, so we set bigger ones
         client = new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
         // Instantiate the Gson client
@@ -100,6 +108,9 @@ public class RestApisConsumer extends IntentService {
             // Query the brand info from Wikipedia's API
             queryBrandInfoFromWikipedia(logoInfo, DEFAULT_WIKIPEDIA_MAX_SENTENCES);
 
+            // Query the brand info from Wikidata's API
+            queryBrandInfoFromWikidata(logoInfo);
+
             broadcast.putExtra(CloudVisionUploader.EXTRA_RESULT_LOGO, logoInfo);
         }
 
@@ -128,6 +139,13 @@ public class RestApisConsumer extends IntentService {
         }
     }
 
+    /**
+     * Query the Wikipedia API to get info about a logo. It updates the ({@code name},
+     * {@code description} and {@code wikipediaArticleUrl} properties of {@link LogoInfo}.
+     *
+     * @param logoInfo a LogoInfo object containing the brand name.
+     * @param maxSentences The max number of sentences to be returned in the description field.
+     */
     private void queryBrandInfoFromWikipedia(LogoInfo logoInfo, int maxSentences) {
 
         // Query info about the brand from Wikipedia
@@ -137,6 +155,55 @@ public class RestApisConsumer extends IntentService {
             logoInfo.setBrandName(wikiArticleInfo.getTitle());
             logoInfo.setDescription(wikiArticleInfo.getExtract());
             logoInfo.setWikipediaArticleUrl(wikiArticleInfo.wikipediaArticleUrl);
+        }
+    }
+
+    /**
+     * Query the Wikidata API to get info about a logo. It updates the ({@code url} and
+     * sets additional info of {@link LogoInfo} with the result data.
+     *
+     * @param logoInfo a LogoInfo object containing the brand name.
+     */
+    private void queryBrandInfoFromWikidata(LogoInfo logoInfo) {
+        // Query info about the brand from Wikidata
+        final WikiDataBrandInfo wikiDataBrandInfo = queryWikiDataBrandInfo(logoInfo.getBrandName());
+
+        if (wikiDataBrandInfo != null) {
+            logoInfo.setLogoUrl(wikiDataBrandInfo.getLogoUrl());
+            logoInfo.setProperties(wikiDataBrandInfo.getProperties());
+        }
+    }
+
+    /**
+     * Uses the Wikidata's API to query info about a brand.
+     *
+     * @param brandName The name of the brand.
+     * @return object with the response of Wikidata query, or {@code null}.
+     */
+    private WikiDataBrandInfo queryWikiDataBrandInfo(String brandName) {
+        final Locale deviceLocale = Locale.getDefault();
+
+        WikipediaQueryRequest qryRequest = new WikipediaQueryRequest().get(brandName, deviceLocale);
+
+        // Build the request
+        final HttpUrl url = HttpUrl.parse(WIKIDATA_API_BASE_URL)
+                .newBuilder()
+                .addQueryParameter("format", "json")
+                .addQueryParameter("query", getWikidataQuery(qryRequest.queryLocale, qryRequest.articleName))
+                .build();
+
+        // Build the request
+        final Request request = new Request.Builder().url(url).get().build();
+
+        try {
+            // Execute call
+            Response response = client.newCall(request).execute();
+
+            // De-serialize the response
+            return gson.fromJson(response.body().string(), WikiDataBrandInfo.class);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+            return null;
         }
     }
 
@@ -278,6 +345,92 @@ public class RestApisConsumer extends IntentService {
      */
     private static String getWikipediasWikiUrl(Locale locale, String articleName) {
         return String.format(WIKIPEDIA_WIKI_BASE_URL, locale.getLanguage(), articleName);
+    }
+
+    /**
+     * Get a locale-dependent SPARQL  query for an entity on Wikidata. In it we query for brands as
+     * instances/subclasses of business enterprise, bands or softwares.
+     *
+     * @param locale The locale to get language and country code.
+     * @param brandName The name of the brand that will be queried.
+     * @return A locale-dependent SPARQL query for the {@code brandName} provided.
+     */
+    private static String getWikidataQuery(Locale locale, String brandName) {
+        String language;
+        // If the user locale language is any variant of english, we will query the default english
+        // API. With different locales, we try to combine the language and country codes (like pt-BR),
+        // and english is added as fallback lang (some properties doesn't have labels in other languages besides english).
+        if (locale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
+            language = locale.getLanguage();
+        } else {
+            language = locale.getCountry().equals("") ? String.format("%s,en", locale.getLanguage()) : String.format("%s-%s,en", locale.getLanguage(), locale.getCountry());
+        }
+
+        String query =
+                "SELECT DISTINCT " +
+                " ?brand " +
+                " ?website ?logo ?country ?inception" +
+                " ?twitter ?facebook" +
+                " ?founders " +
+                " ?headquarters ?divisions ?employees" +
+                " ?genre ?awards" +
+                " ?developers ?languages ?licenses" +
+                "WHERE {" +
+                    " ?brand ?label \"%s\" ." + // Search by Brand name
+                    " { ?brand wdt:P31/wdt:P279* wd:Q4830453 . }" + // Business enterprise (instance of any subclass of)
+                " UNION" +
+                    " { ?brand wdt:P31/wdt:P279* wd:Q215380 . }" +  // Band (instance of any subclass of)
+                " UNION" +
+                    " { ?brand wdt:P31/wdt:P279* wd:Q7397 . }" +    // Software (instance of any subclass of)
+                " OPTIONAL { ?brand wdt:P856 ?website . }" +
+                " OPTIONAL { ?brand wdt:P154 ?logo . }" +
+                " OPTIONAL { ?brand wdt:P17 ?country . }" +
+                " OPTIONAL { ?brand wdt:P495 ?country . }" +
+                " OPTIONAL { ?brand wdt:P1128 ?employees . }" +
+                " OPTIONAL { ?brand wdt:P571 ?inception . }" +
+                " OPTIONAL { ?brand wdt:P2002 ?twitter . }" +
+                " OPTIONAL { ?brand wdt:P2013 ?facebook . }" +
+                " OPTIONAL { ?brand wdt:P136 ?genre . }" +
+                " SERVICE wikibase:label {" +
+                    " bd:serviceParam wikibase:language \"%s\" ." + // Language for labels
+                    " ?country rdfs:label ?country ." +
+                    " ?genre rdfs:label ?genre }" +
+                " { SELECT " +
+                    " (GROUP_CONCAT(DISTINCT(?founderLabel); separator=\", \") as ?founders)" +
+                    " (GROUP_CONCAT(DISTINCT(?industryLabel); separator=\", \") as ?divisions)" +
+                    " (GROUP_CONCAT(DISTINCT(?headquarterLabel); separator=\", \") as ?headquarters)" +
+                    " (GROUP_CONCAT(DISTINCT(?developerLabel); separator=\", \") as ?developers)" +
+                    " (GROUP_CONCAT(DISTINCT(?languageLabel); separator=\", \") as ?languages)" +
+                    " (GROUP_CONCAT(DISTINCT(?licenseLabel); separator=\", \") as ?licenses)" +
+                    " (GROUP_CONCAT(DISTINCT(?awardLabel); separator=\", \") as ?awards)" +
+                    " WHERE {" +
+                        " ?brand ?label \"%s\" ." + // Search by Brand name
+                        " { ?brand wdt:P31/wdt:P279* wd:Q4830453 . }" + // Business enterprise (instance of any subclass of)
+                        " UNION" +
+                        " { ?brand wdt:P31/wdt:P279* wd:Q215380 . }" +  // Band (instance of any subclass of)
+                        " UNION" +
+                        " { ?brand wdt:P31/wdt:P279* wd:Q7397 . }" +    // Software (instance of any subclass of)
+                    " OPTIONAL { ?brand wdt:P112 ?founder . }" +
+                    " OPTIONAL { ?brand wdt:P159 ?headquartersLocation . }" +
+                    " OPTIONAL { ?brand wdt:P452 ?industry . }  " +
+                    " OPTIONAL { ?brand wdt:P178 ?developer . }" +
+                    " OPTIONAL { ?brand wdt:P277 ?language . }" +
+                    " OPTIONAL { ?brand wdt:P275 ?license . }" +
+                    " OPTIONAL { ?brand wdt:P166 ?award . }" +
+                " SERVICE wikibase:label {" +
+                    " bd:serviceParam wikibase:language \"%s\" ." + // Language for labels
+                    " ?founder rdfs:label ?founderLabel ." +
+                    " ?industry rdfs:label ?industryLabel ." +
+                    " ?headquartersLocation rdfs:label ?headquarterLabel ." +
+                    " ?developer rdfs:label ?developerLabel ." +
+                    " ?language rdfs:label ?languageLabel ." +
+                    " ?license rdfs:label ?licenseLabel ." +
+                    " ?award rdfs:label ?awardLabel }" +
+                "} } }" +
+                " ORDER BY ?brand" +
+                " LIMIT 1";
+
+        return String.format(query, brandName, language, brandName, language);
     }
 
     private class WikipediaQueryRequest {

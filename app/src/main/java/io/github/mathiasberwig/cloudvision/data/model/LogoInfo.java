@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 
+import java.util.ArrayList;
+
 /**
  * Class that stores info about a logo.
  *
@@ -16,6 +18,8 @@ public class LogoInfo implements Parcelable {
     private String brandName;
     private String description;
     private String wikipediaArticleUrl;
+    private ArrayList<EntityProperty> properties;
+    private String logoUrl;
 
     public LogoInfo(String brandName) {
         this.brandName = brandName;
@@ -26,6 +30,8 @@ public class LogoInfo implements Parcelable {
         brandName = in.readString();
         description = in.readString();
         wikipediaArticleUrl = in.readString();
+        properties = in.readArrayList(EntityProperty.class.getClassLoader());
+        logoUrl = in.readString();
     }
 
     public static LogoInfo createFromAnnotation(@NonNull EntityAnnotation logoAnnotation) {
@@ -57,6 +63,8 @@ public class LogoInfo implements Parcelable {
         dest.writeString(brandName);
         dest.writeString(description);
         dest.writeString(wikipediaArticleUrl);
+        dest.writeList(properties);
+        dest.writeString(logoUrl);
     }
 
     public String getBrandName() {
@@ -81,5 +89,21 @@ public class LogoInfo implements Parcelable {
 
     public void setWikipediaArticleUrl(String wikipediaArticleUrl) {
         this.wikipediaArticleUrl = wikipediaArticleUrl;
+    }
+
+    public ArrayList<EntityProperty> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(ArrayList<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 }

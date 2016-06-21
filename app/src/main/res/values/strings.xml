@@ -37,7 +37,26 @@
     <string name="wikipedia_powered">Powered by Wikipedia</string>
     <string name="btn_more">More</string>
 
+    <!-- Brand Properties (from Wikidata) -->
+    <string name="p_website">Website</string>
+    <string name="p_logo">Logo</string>
+    <string name="p_country">Country</string>
+    <string name="p_inception">Inception Date</string>
+    <string name="p_twitter">Twitter Profile</string>
+    <string name="p_facebook">Facebook Profile</string>
+    <string name="p_founders">Founders</string>
+    <string name="p_headquarters">Headquarters</string>
+    <string name="p_divisions">Divisions</string>
+    <string name="p_employees">Employee Number</string>
+    <string name="p_genre">Genre</string>
+    <string name="p_awards">Awards</string>
+    <string name="p_developers">Developers</string>
+    <string name="p_languages">Programming Languages</string>
+    <string name="p_license">Copyright Licenses</string>
+
     <!-- Placeholders (used just in development) -->
     <string name="placeholder_article_name">Article Name</string>
     <string name="placeholder_article_info">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis metus diam. Proin nec ligula vitae magna vehicula pulvinar id quis nibh. Nullam quis nunc enim. Vestibulum luctus metus mollis leo bibendum finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse in venenatis odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vivamus facilisis posuere ullamcorper. Morbi viverra sem vitae eros sodales, quis ullamcorper elit vulputate. Curabitur vel nunc nec arcu dignissim auctor. Vestibulum rhoncus leo tellus, eu tincidunt orci blandit non. Integer efficitur ac diam non ultrices."</string>
+    <string name="placeholder_property_name">Property Name</string>
+    <string name="placeholder_property_value">Property Value</string>
 </resources>
