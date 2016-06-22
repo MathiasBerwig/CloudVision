@@ -181,12 +181,17 @@ public class SelectImageActivity extends AppCompatActivity {
             try {
                 CloudVisionUploader.start(this, copyFileFromGallery(data.getData()));
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(this, R.string.error_handling_image, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error handling image file.", e);
             }
             toggleLoading(true);
-        }
-        else if(requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            CloudVisionUploader.start(this, Uri.fromFile(getCameraFile()));
+        } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            try {
+                CloudVisionUploader.start(this, copyFileFromGallery(Uri.fromFile(getCameraFile())));
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.error_handling_image, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error handling image file.", e);
+            }
             toggleLoading(true);
         }
     }
@@ -304,9 +309,19 @@ public class SelectImageActivity extends AppCompatActivity {
     /**
      * Gets a new file to store the image taken with {@link #startCamera(View)} method.
      *
-     * @return new file on the app's directory with {@link #FILE_NAME}.
+     * @return new file external storage public directory with {@link #FILE_NAME}.
      */
     public File getCameraFile() {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                FILE_NAME);
+    }
+
+    /**
+     * Gets a new file to store the image on app's directory.
+     *
+     * @return new file on the app's directory with {@link #FILE_NAME}.
+     */
+    public File getAppDirectoryFile() {
         return new File(getFilesDir(), FILE_NAME);
     }
 
@@ -322,7 +337,7 @@ public class SelectImageActivity extends AppCompatActivity {
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
-        File outputFile = getCameraFile();
+        File outputFile = getAppDirectoryFile();
 
         try {
             // read this file into InputStream

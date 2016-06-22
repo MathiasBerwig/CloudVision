@@ -27,6 +27,7 @@
         <item>Calibrating thrusters</item>
     </string-array>
     <string name="title_gallery_chooser">Select a photo</string>
+    <string name="error_handling_image">We had a problem getting the picture. Try with another.</string>
 
     <!-- Main Activity -->
     <string name="title_hint">Hint</string>
