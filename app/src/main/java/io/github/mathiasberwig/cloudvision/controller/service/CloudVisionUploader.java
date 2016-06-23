@@ -64,8 +64,7 @@ import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
 public class CloudVisionUploader extends IntentService {
     private static final String TAG = CloudVisionUploader.class.getName();
 
-    // TODO: Before you run your application, you need a Google Cloud Vision API key.
-    private static final String CLOUD_VISION_API_KEY = "";
+    private static String CLOUD_VISION_API_KEY;
 
     // Parameters Extras
     public static final String EXTRA_LABEL_DETECTION = "EXTRA_LABEL_DETECTION";
@@ -110,7 +109,7 @@ public class CloudVisionUploader extends IntentService {
     public static final String ACTION_DONE = "io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader.ACTION_DONE";
 
     public CloudVisionUploader() {
-        super("CloudVisionUploader");
+        super(TAG);
     }
 
     /**
@@ -134,12 +133,18 @@ public class CloudVisionUploader extends IntentService {
         intent.putExtra(EXTRA_MAX_LOGOS, sp.getInt(EXTRA_MAX_LOGOS, DEFAULT_MAX_LOGOS));
         intent.putExtra(EXTRA_MAX_LANDMARKS, sp.getInt(EXTRA_MAX_LANDMARKS, DEFAULT_MAX_LANDMARKS));
 
+        // Set the Cloud Vision API Key from resources
+        CLOUD_VISION_API_KEY = context.getString(R.string.google_apis_key);
+
         context.startService(intent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent == null || intent.getExtras() == null) return;
+        if (intent.getExtras() == null || CLOUD_VISION_API_KEY == null) {
+            Log.e(TAG, "onHandleIntent: intent.getExtras() or CLOUD_VISION_API_KEY is null");
+            return;
+        }
 
         // Get the parameters to call Cloud Vision
         final Bundle options = intent.getExtras();
