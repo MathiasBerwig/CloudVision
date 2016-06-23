@@ -12,9 +12,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
@@ -195,7 +195,7 @@ public class CloudVisionUploader extends IntentService {
             base64EncodedImage.encodeContent(imageBytes);
 
             // Setup HttpTransport and Serialization Factory
-            HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+            HttpTransport httpTransport = new NetHttpTransport();
             JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
             // Setup Vision instance
