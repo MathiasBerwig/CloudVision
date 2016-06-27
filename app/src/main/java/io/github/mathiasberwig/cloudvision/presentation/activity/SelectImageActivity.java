@@ -35,6 +35,7 @@ import io.github.mathiasberwig.cloudvision.controller.service.RestApisConsumer;
 import io.github.mathiasberwig.cloudvision.presentation.custom_view.FAB;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LoadingFragment;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SelectImageActivity extends AppCompatActivity {
     private static final String TAG = SelectImageActivity.class.getName();
@@ -212,6 +213,11 @@ public class SelectImageActivity extends AppCompatActivity {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(uploadCompleteReceiver);
         lbm.unregisterReceiver(queryCompleteReceiver);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     /**

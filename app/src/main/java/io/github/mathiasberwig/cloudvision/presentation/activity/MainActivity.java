@@ -3,6 +3,7 @@ package io.github.mathiasberwig.cloudvision.presentation.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
 import io.github.mathiasberwig.cloudvision.controller.service.RestApisConsumer;
 import io.github.mathiasberwig.cloudvision.presentation.adapter.FragmentPageAdapter;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Main Activity of application. Handles the ViewPager and respective fragments.
@@ -75,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     /**
      * Find all views of Activity's layout.
      */
@@ -83,13 +90,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Set's the adapter, header image and {@link PagerTitleStrip} of {@link #viewPager}.
+     * Set's the adapter, header image and {@link PagerTitleStrip} (with custom typeface) of
+     * {@link #viewPager}.
      */
     private void setupViewPager() {
         viewPager.getViewPager().setAdapter(new FragmentPageAdapter(getSupportFragmentManager(), this));
         viewPager.setImageDrawable(new BitmapDrawable(getResources(), getHeaderImage()), 500);
         viewPager.getViewPager().setOffscreenPageLimit(viewPager.getViewPager().getAdapter().getCount());
         viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
+
+        // Set custom typeface
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Lato-Regular.ttf");
+        viewPager.getPagerTitleStrip().setTypeface(typeface, Typeface.BOLD);
     }
 
     /**
