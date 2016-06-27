@@ -46,58 +46,69 @@ dependencies {
 
     /**
      * Google Cloud Vision API
+     * https://cloud.google.com/vision/
      */
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
 
     /**
      * Google Maps API
+     * https://developers.google.com/maps/documentation/android-api/?hl=pt-br
      */
     compile 'com.google.android.gms:play-services-maps:9.0.1'
 
     /**
      *  Google GSON Client
+     *  https://github.com/google/gson
      */
     compile 'com.google.http-client:google-http-client-gson:1.20.0'
 
     /**
      * MaterialViewPager
+     * https://github.com/florent37/MaterialViewPager
      */
     compile ('com.github.florent37:materialviewpager:1.1.3@aar' ){
         transitive = true
     }
 
     /**
-     * H Text View
+     * HTextView
+     * https://github.com/hanks-zyh/HTextView
      */
     compile 'hanks.xyz:htextview-library:0.1.3'
 
     /**
      * android-gif-drawable
+     * https://github.com/koral--/android-gif-drawable
      */
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.15'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.16'
 
     /**
      * Android-RoundCornerProgressBar
+     * https://github.com/akexorcist/Android-RoundCornerProgressBar
      */
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
 
     /**
      * OkHttp
+     * https://github.com/square/okhttp
      */
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
 
     /**
      * AppIntro
+     * https://github.com/PaoloRotolo/AppIntro
      */
     compile 'com.github.paolorotolo:appintro:4.0.0'
 
     /**
      * Glide
+     * https://github.com/bumptech/glide
      */
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     /**
      * AndroidSVG
+     * https://code.google.com/archive/p/androidsvg/
      */
     compile group: 'com.caverock', name: 'androidsvg', version: '1.2.1'
 
