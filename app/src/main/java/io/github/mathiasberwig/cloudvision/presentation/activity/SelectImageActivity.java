@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,7 @@ import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploade
 import io.github.mathiasberwig.cloudvision.controller.service.RestApisConsumer;
 import io.github.mathiasberwig.cloudvision.presentation.custom_view.FAB;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LoadingFragment;
+import io.github.mathiasberwig.cloudvision.presentation.fragment.PreferencesFragment;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -48,6 +50,18 @@ public class SelectImageActivity extends AppCompatActivity {
     // UI Components
     private MaterialSheetFab materialSheetFab;
     private MenuItem menuSettings;
+
+    /**
+     * {@code true} if the current fragment in {@link R.id#fragment_container} is {@link PreferencesFragment}.
+     * Otherwise, {@code false}.
+     */
+    boolean settingsVisible;
+
+    /**
+     * Reference to {@link PreferencesFragment}, so we can remove it from {@link android.app.FragmentManager}
+     * to avoid overlapping with {@link android.support.v4.app.FragmentManager}.
+     */
+    Fragment preferencesFragment;
 
     /**
      * Receiver that is executed when the {@link CloudVisionUploader} finishes sending the image to
@@ -138,6 +152,10 @@ public class SelectImageActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (materialSheetFab.isSheetVisible()) {
             materialSheetFab.hideSheet();
+        } else if (settingsVisible) {
+            getFragmentManager().beginTransaction().remove(preferencesFragment).commit();
+            settingsVisible = false;
+            toggleLoading(false);
         } else {
             super.onBackPressed();
         }
@@ -152,6 +170,7 @@ public class SelectImageActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            showPreferences();
             return true;
         }
 
@@ -272,6 +291,28 @@ public class SelectImageActivity extends AppCompatActivity {
         menuSettings.setVisible(!isLoading);
 
         transaction.commit();
+    }
+
+    /**
+     * Shows the preference screen by replacing the current fragment.
+     */
+    private void showPreferences() {
+
+        if (preferencesFragment == null) preferencesFragment = PreferencesFragment.newInstance();
+
+        // Create the transaction to replace fragment
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, preferencesFragment)
+                .commit();
+
+        settingsVisible = true;
+
+        // Hides the FAB
+        materialSheetFab.hideSheetThenFab();
+
+        // Hide Settings menu item
+        menuSettings.setVisible(false);
     }
 
     /**

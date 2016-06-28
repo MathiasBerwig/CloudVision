@@ -55,6 +55,15 @@
     <string name="p_languages">Programming Languages</string>
     <string name="p_license">Copyright Licenses</string>
 
+    <!-- Preferences -->
+    <string name="pref_category_cloud_vision">Cloud Vision API</string>
+    <string name="pref_title_image_quality">Image Quality</string>
+    <string name="pref_image_quality">Used for compression. 0 meaning compress for small size, 100 meaning compress for max quality.</string>
+    <string name="pref_title_max_labels">Max Number of tags</string>
+    <string name="pref_max_labels">How many labels you want us to search for each image?</string>
+    <string name="pref_category_about">About</string>
+    <string name="pref_about">Cloud Vision Demo is an Android (4.4+) app that demonstrates the Cloud Vision API in a simple and well documented way. With the support of the query APIs of  Wikipedia and Wikidata, it shows additional info about the logo and landmarks identified in the image, besides a list of the related tags. \n\n It was developed by me with some simple purposes in mind: learn a bit more about computer vision; fill my free time creating an Android app; know better the Google Cloud Platform; and practice my english writing skills (nothing better than do documentation, right!?). As the app was taking form, my interest in show it for more people increased, so I decided to make it open source and write academic papers about this subject.</string>
+
     <!-- Placeholders (used just in development) -->
     <string name="placeholder_article_name">Article Name</string>
     <string name="placeholder_article_info">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis metus diam. Proin nec ligula vitae magna vehicula pulvinar id quis nibh. Nullam quis nunc enim. Vestibulum luctus metus mollis leo bibendum finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse in venenatis odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vivamus facilisis posuere ullamcorper. Morbi viverra sem vitae eros sodales, quis ullamcorper elit vulputate. Curabitur vel nunc nec arcu dignissim auctor. Vestibulum rhoncus leo tellus, eu tincidunt orci blandit non. Integer efficitur ac diam non ultrices."</string>

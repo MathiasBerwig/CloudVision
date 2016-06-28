@@ -71,12 +71,12 @@ public class CloudVisionUploader extends IntentService {
     public static final String EXTRA_LOGO_DETECTION = "EXTRA_LOGO_DETECTION";
     public static final String EXTRA_LANDMARK_DETECTION = "EXTRA_LANDMARK_DETECTION";
     public static final String EXTRA_IMAGE_PROPERTIES = "EXTRA_IMAGE_PROPERTIES";
-    public static final String EXTRA_MAX_LABELS = "EXTRA_MAX_LABELS";
+    public static final String EXTRA_MAX_LABELS = "pref_max_labels";
     public static final String EXTRA_MAX_LOGOS = "EXTRA_MAX_LOGOS";
     public static final String EXTRA_MAX_LANDMARKS = "EXTRA_MAX_LANDMARKS";
     public static final String EXTRA_MAX_IMAGE_PROPERTIES = "EXTRA_MAX_IMAGE_PROPERTIES";
     public static final String EXTRA_IMAGE_URI = "EXTRA_IMAGE_URI";
-    public static final String EXTRA_IMAGE_QUALITY = "EXTRA_IMAGE_QUALITY";
+    public static final String EXTRA_IMAGE_QUALITY = "pref_image_quality";
 
     // Response Extras
     /**

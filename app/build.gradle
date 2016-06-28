@@ -118,6 +118,12 @@ dependencies {
      */
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
+    /**
+     * MaterialSeekBarPreference
+     * https://github.com/MrBIMC/MaterialSeekBarPreference
+     */
+    compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
+
     configurations {
         compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
     }
