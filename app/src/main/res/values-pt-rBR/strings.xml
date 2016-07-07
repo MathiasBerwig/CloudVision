@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">Cloud Vision</string>
+    <string name="action_settings">Configurações</string>
+
+    <!-- Botão de Ação Flutuante -->
+    <string name="action_camera">Câmera</string>
+    <string name="action_gallery">Galeria</string>
+
+    <!-- Erros -->
+    <string name="image_picker_error">Algo está errado com esta imagem. \n Por favor escolha uma diferente.</string>
+    <string name="api_request_error">Falha ao fazer requisição ao servidor. \n Verifique sua conexão com a internet.</string>
+
+    <!-- Títulos -->
+    <string name="title_activity_main">Cloud Vision Demo</string>
+    <string name="title_tab_labels">Tags</string>
+    <string name="title_tab_logos">Logotipos</string>
+    <string name="title_tab_landmarks">Monumentos</string>
+    <string name="title_tab_default">Erro</string>
+
+    <!-- Fragmento de Seleção de Imagem -->
+    <string-array name="loading_subtitles">
+        <item>Treinando robôs</item>
+        <item>Expandindo redes neurais</item>
+        <item>Distorcendo o espaço-tempo contínuo</item>
+        <item>Coletando ervas medicinais</item>
+        <item>Calibrando propulsores</item>
+        <item>Os arquitetos ainda estão desenhando</item>
+        <item>Reproduzindo bits</item>
+        <item>Posicionando satélites</item>
+        <item>Aquecendo Grande Colisor de Hádrons</item>
+        <item>Reconfigurando máquina de café</item>
+        <item>Iniciando contagem regressiva do infinito</item>
+        <item>Ajustando informações para o seu QI</item>
+        <item>Melhorando suas habilidades de leitura</item>
+        <item>Recalculando π</item>
+        <item>Acordando inteligência artificial</item>
+        <item>Rebobinando DVDs</item>
+        <item>Sonhando com PCs mais rápidos</item>
+        <item>Simulando o futuro deterministicamente</item>
+        <item>Iniciando lançamento de mísseis</item>
+        <item>Medindo comprimento dos cabos de rede</item>
+    </string-array>
+    <string name="title_gallery_chooser">Selecionar imagem</string>
+    <string name="error_handling_image">Tivemos um problema ao obter a imagem. Tente outra.</string>
+
+    <!-- Activity Principal -->
+    <string name="title_hint">Dica</string>
+    <string name="hint_label">Cada objeto detectado pela API do Cloud Vision obtém uma tag e uma pontuação. A tag nada mais é do que uma etiqueta, e a pontuação indica o grau de similaridade dela encontrado na imagem.</string>
+    <string name="landmark_location">Localização</string>
+    <string name="landmark_empty_message">Não identificamos nenhum monumento</string>
+    <string name="logo_empty_message">Não identificamos nenhum logotipo</string>
+    <string name="wikipedia_powered">Provido por Wikipedia</string>
+    <string name="btn_more">Mais</string>
+
+    <!-- Propriedades da Marca (do Wikidata) -->
+    <string name="p_website">Website</string>
+    <string name="p_logo">Logotipo</string>
+    <string name="p_country">País</string>
+    <string name="p_inception">Data de Fundação</string>
+    <string name="p_twitter">Perfil no Twitter</string>
+    <string name="p_facebook">Perfil no Facebook</string>
+    <string name="p_founders">Fundadores</string>
+    <string name="p_headquarters">Sedes</string>
+    <string name="p_divisions">Divisões</string>
+    <string name="p_employees">Número de Empregados</string>
+    <string name="p_genre">Gênero</string>
+    <string name="p_awards">Prêmios</string>
+    <string name="p_developers">Desenvolvedores</string>
+    <string name="p_languages">Linguagens de Programação</string>
+    <string name="p_license">Licenças de direitos autorais</string>
+
+    <!-- Preferências -->
+    <string name="pref_category_cloud_vision">API do Cloud Vision</string>
+    <string name="pref_title_image_quality">Qualidade da Imagem</string>
+    <string name="pref_image_quality">Usada para compressão. 0 significa menor tamanho, 100 significa qualidade máxima.</string>
+    <string name="pref_title_max_labels">Número máximo de tags</string>
+    <string name="pref_max_labels">Quantas etiquetas você quer pesquisar para cada imagem?</string>
+    <string name="pref_category_about">Sobre</string>
+    <string name="pref_about">O Cloud Vision Demo é uma aplicação para Android (4.4+) que demonstra o funcionamento da API Cloud Vision de forma simples e bem documentada. Com o auxílio das APIs de busca do Wikipedia e Wikidata, ele exibe informações adicionais sobre logotipos e monumentos identificados na imagem, além de uma lista com as tags relacionadas.</string>
+    <string name="pref_motivation">Ele foi desenvolvido por mim com alguns propósitos simples em mente: aprender um pouco mais sobre visão computacional; ocupar meu tempo livre criando um app para Android; conhecer melhor o Google Cloud Platform; e aprimorar minha escrita em inglês (nada melhor do que fazer documentação). A medida que o app foi tomando forma, meu interesse em mostra-lo à mais pessoas aumentou, por isso decidi torna-lo open source e escrever artigos acadêmicos sobre o tema.</string>
+    <string name="pref_check_on_github">Ver no GitHub</string>
+</resources>
