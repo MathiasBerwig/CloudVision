@@ -41,9 +41,22 @@
 
         <!-- About text -->
         <Preference
-            android:key="pref_about"
-            android:selectable="false"
             android:persistent="false"
-            android:summary="@string/pref_about"/>
+            android:selectable="false"
+            android:summary="@string/pref_about" />
+
+        <!-- Motivation text -->
+        <Preference
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/pref_motivation" />
+
+        <!-- Check on GitHub -->
+        <Preference
+            android:title="@string/pref_check_on_github">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MathiasBerwig/CloudVision" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
