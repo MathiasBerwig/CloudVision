@@ -74,7 +74,7 @@ dependencies {
      * HTextView
      * https://github.com/hanks-zyh/HTextView
      */
-    compile 'hanks.xyz:htextview-library:0.1.3'
+    compile 'hanks.xyz:htextview-library:0.1.4@aar'
 
     /**
      * android-gif-drawable
