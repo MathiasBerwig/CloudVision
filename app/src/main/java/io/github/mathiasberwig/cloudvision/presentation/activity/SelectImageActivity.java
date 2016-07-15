@@ -136,6 +136,24 @@ public class SelectImageActivity extends AppCompatActivity {
 
         setupToolbar();
         setupFAB();
+
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        // Check if we received an image as extra
+        if (Intent.ACTION_SEND.equals(action) && type != null && type.startsWith("image/")) {
+            Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            // Start loading the image to CloudVisionUploader
+            try {
+                CloudVisionUploader.start(this, copyFileFromGallery(imageUri));
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.error_handling_image, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error handling image file.", e);
+            }
+            toggleLoading(true);
+        }
     }
 
     @Override
@@ -288,7 +306,9 @@ public class SelectImageActivity extends AppCompatActivity {
         }
 
         // Toggle visibility of Settings menu item
-        menuSettings.setVisible(!isLoading);
+        if (menuSettings != null) {
+            menuSettings.setVisible(!isLoading);
+        }
 
         transaction.commit();
     }
