@@ -4,5 +4,28 @@
     android:layout_height="match_parent"
     tools:context="io.github.mathiasberwig.cloudvision.presentation.fragment.SelectImageFragment">
 
-    <!-- TODO: Place a beautiful Empty View/Welcome Screen here  -->
+
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_select_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_world_landmarks" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_select_photo"
+            android:layout_centerHorizontal="true"
+            android:text="@string/title_gallery_chooser"
+            android:textAllCaps="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
 </FrameLayout>

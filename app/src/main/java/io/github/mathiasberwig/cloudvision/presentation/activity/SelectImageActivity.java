@@ -136,6 +136,7 @@ public class SelectImageActivity extends AppCompatActivity {
 
         setupToolbar();
         setupFAB();
+        toggleLoading(false);
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
