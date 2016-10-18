@@ -276,7 +276,6 @@ public class SelectImageActivity extends AppCompatActivity {
         View overlay = findViewById(R.id.dim_overlay);
         int sheetColor = getResources().getColor(R.color.cardview_light_background);
         int fabColor = getResources().getColor(R.color.colorAccent);
-        assert fab != null && sheetView != null && overlay != null;
 
         // Initialize material sheet FAB
         materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay, sheetColor, fabColor);
