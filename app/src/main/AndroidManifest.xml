@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Application -->
     <application
         android:name=".CloudVision"
         android:allowBackup="true"
@@ -15,42 +16,43 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_apis.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+        <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_apis_key" />
 
+        <!-- Select Image Activity -->
         <activity
             android:name=".presentation.activity.SelectImageActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
+        <!-- Intro Activity -->
         <activity android:name=".presentation.activity.IntroActivity" />
 
+        <!-- Main Activity -->
         <activity
             android:name=".presentation.activity.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.MainActivity" />
 
+        <!-- Cloud Vision Uploader -->
         <service
             android:name=".controller.service.CloudVisionUploader"
             android:exported="false" />
+
+        <!-- Rest APIs Consumer -->
         <service
             android:name=".controller.service.RestApisConsumer"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 </manifest>
