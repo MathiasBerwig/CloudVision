@@ -61,6 +61,6 @@ public class LabelsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         // Register the RecyclerView
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
     }
 }
