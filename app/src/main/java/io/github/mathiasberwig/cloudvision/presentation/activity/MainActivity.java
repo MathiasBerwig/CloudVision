@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
      * {@link #viewPager}.
      */
     private void setupViewPager() {
-        viewPager.getViewPager().setAdapter(new FragmentPageAdapter(getSupportFragmentManager(), this));
+        FragmentPageAdapter fragAdapter = new FragmentPageAdapter(getSupportFragmentManager(), this, getExtras());
+        viewPager.getViewPager().setAdapter(fragAdapter);
         viewPager.setImageDrawable(new BitmapDrawable(getResources(), getHeaderImage()), 500);
         viewPager.getViewPager().setOffscreenPageLimit(viewPager.getViewPager().getAdapter().getCount());
         viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
