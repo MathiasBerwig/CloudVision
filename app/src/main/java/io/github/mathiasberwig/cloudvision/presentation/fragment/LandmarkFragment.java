@@ -59,19 +59,12 @@ public class LandmarkFragment extends Fragment implements OnMapReadyCallback {
         Bundle extras = ((MainActivity) getActivity()).getExtras();
         landmarkInfo = extras.getParcelable(CloudVisionUploader.EXTRA_RESULT_LANDMARK);
 
-        // Inflate the default layout or EmptyView
-        return inflater.inflate(landmarkInfo == null ?
-                R.layout.fragment_view_pager_empty : R.layout.fragment_landmark, container, false);
+        return inflater.inflate(R.layout.fragment_landmark, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (landmarkInfo == null) {
-            setupEmptyView(view);
-            return;
-        }
 
         // Setup the ScrollView and register it with MaterialViewPager
         ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
@@ -125,15 +118,5 @@ public class LandmarkFragment extends Fragment implements OnMapReadyCallback {
             // Set the map ready callback to receive the GoogleMap object
             mapLandmarkLocation.getMapAsync(this);
         }
-    }
-
-    /**
-     * Find all views used by the {@link R.layout#fragment_view_pager_empty} and setup it properly.
-     *
-     * @param view {@link R.layout#fragment_view_pager_empty} inflated.
-     */
-    private void setupEmptyView(View view) {
-        TextView txtEmptyMessage = (TextView) view.findViewById(R.id.txt_empty_message);
-        txtEmptyMessage.setText(R.string.landmark_empty_message);
     }
 }

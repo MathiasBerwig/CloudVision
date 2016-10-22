@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar;
-import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;

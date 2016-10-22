@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,19 +35,12 @@ public class LabelsFragment extends Fragment {
         Bundle extras = ((MainActivity) getActivity()).getExtras();
         labelsInfo = extras.getParcelableArrayList(CloudVisionUploader.EXTRA_RESULT_LABELS);
 
-        // Inflate the default layout
         return inflater.inflate(R.layout.fragment_labels, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Check if we have valid info to show
-        if (labelsInfo == null) {
-            Log.i(TAG, "labelsInfo == null");
-            return;
-        }
 
         // Setup the RecyclerView
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_labels);

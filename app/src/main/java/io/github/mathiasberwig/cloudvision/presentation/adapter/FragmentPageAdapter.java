@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.mathiasberwig.cloudvision.CloudVision;
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
 import io.github.mathiasberwig.cloudvision.presentation.fragment.LabelsFragment;

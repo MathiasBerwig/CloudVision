@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
@@ -35,20 +34,12 @@ public class LogoFragment extends Fragment {
         Bundle extras = ((MainActivity) getActivity()).getExtras();
         logosInfo = extras.getParcelable(CloudVisionUploader.EXTRA_RESULT_LOGO);
 
-        // Inflate the default layout or Empty View
-        return inflater.inflate(logosInfo == null ?
-                R.layout.fragment_view_pager_empty : R.layout.fragment_logo, container, false);
+        return inflater.inflate(R.layout.fragment_logo, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Check if we have valid info to show
-        if (logosInfo == null) {
-            setupEmptyView(view);
-            return;
-        }
 
         // Setup the RecyclerView
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_logos);
@@ -62,15 +53,5 @@ public class LogoFragment extends Fragment {
 
         // Register the RecyclerView
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
-    }
-
-    /**
-     * Find all views used by the {@link R.layout#fragment_view_pager_empty} and setup it properly.
-     *
-     * @param view {@link R.layout#fragment_view_pager_empty} inflated.
-     */
-    private void setupEmptyView(View view) {
-        TextView txtEmptyMessage = (TextView) view.findViewById(R.id.txt_empty_message);
-        txtEmptyMessage.setText(R.string.logo_empty_message);
     }
 }

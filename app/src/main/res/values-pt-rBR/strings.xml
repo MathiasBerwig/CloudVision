@@ -47,8 +47,6 @@
     <string name="title_hint">Dica</string>
     <string name="hint_label">Cada objeto detectado pela API do Cloud Vision obtém uma tag e uma pontuação. A tag nada mais é do que uma etiqueta, e a pontuação indica o grau de similaridade dela encontrado na imagem.</string>
     <string name="landmark_location">Localização</string>
-    <string name="landmark_empty_message">Não identificamos nenhum monumento</string>
-    <string name="logo_empty_message">Não identificamos nenhum logotipo</string>
     <string name="wikipedia_powered">Provido por Wikipedia</string>
     <string name="btn_more">Mais</string>
 
