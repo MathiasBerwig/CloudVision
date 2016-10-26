@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -67,8 +65,8 @@ public class LandmarkFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
 
         // Setup the ScrollView and register it with MaterialViewPager
-        ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-        MaterialViewPagerHelper.registerScrollView(getActivity(), scrollView, null);
+//        ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
+//        MaterialViewPagerHelper.registerScrollView(getActivity(), scrollView, null);
 
         findInfoViews(view);
         setupInfoViews();

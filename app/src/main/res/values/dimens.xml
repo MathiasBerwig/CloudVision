@@ -20,4 +20,7 @@
     <dimen name="keyline_spacing">16dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- Cards -->
+    <dimen name="card_margin">8dp</dimen>
 </resources>

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId "io.github.mathiasberwig.cloudvision"
@@ -56,12 +56,10 @@ dependencies {
     compile 'com.google.http-client:google-http-client-gson:1.20.0'
 
     /**
-     * MaterialViewPager
-     * https://github.com/florent37/MaterialViewPager
+     * NavigationTabStrip
+     * https://github.com/DevLight-Mobile-Agency/NavigationTabStrip
      */
-    compile ('com.github.florent37:materialviewpager:1.2.0@aar' ){
-        transitive = true
-    }
+    compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
 
     /**
      * HTextView

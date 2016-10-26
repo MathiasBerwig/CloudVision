@@ -3,18 +3,19 @@ package io.github.mathiasberwig.cloudvision.presentation.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 
-import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
 import java.io.IOException;
 
@@ -30,7 +31,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
 
-    private MaterialViewPager viewPager;
+    private ViewPager viewPager;
+    private NavigationTabStrip tabs;
+    private ImageView imageView;
 
     /**
      * Factory method to create a new MainActivity instance.
@@ -50,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
         findViews();
         setupViewPager();
-        setupToolbar();
     }
 
     @Override
@@ -62,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
      * Find all views of Activity's layout.
      */
     private void findViews() {
-        viewPager = (MaterialViewPager) findViewById(R.id.view_pager);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        tabs = (NavigationTabStrip) findViewById(R.id.tabs);
+        imageView = (ImageView) findViewById(R.id.backdrop);
     }
 
     /**
@@ -71,33 +75,16 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupViewPager() {
         FragmentPageAdapter fragAdapter = new FragmentPageAdapter(getSupportFragmentManager(), this, getExtras());
-        viewPager.getViewPager().setAdapter(fragAdapter);
-        viewPager.setImageDrawable(new BitmapDrawable(getResources(), getHeaderImage()), 500);
-        viewPager.getViewPager().setOffscreenPageLimit(viewPager.getViewPager().getAdapter().getCount());
-        viewPager.getPagerTitleStrip().setViewPager(viewPager.getViewPager());
+        viewPager.setAdapter(fragAdapter);
+        tabs.setViewPager(viewPager);
 
-        // Set custom typeface
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Lato-Regular.ttf");
-        viewPager.getPagerTitleStrip().setTypeface(typeface, Typeface.BOLD);
-    }
+        // Set tab titles
+        String[] titles = new String[fragAdapter.getCount()];
+        for (int i = 0; i < fragAdapter.getCount(); i++)
+            titles[i] = fragAdapter.getPageTitle(i).toString();
+        tabs.setTitles(titles);
 
-    /**
-     * Gets the {@link Toolbar} and {@link ActionBar} then configures it.
-     */
-    private void setupToolbar() {
-        final Toolbar toolbar = viewPager.getToolbar();
-
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar == null) return;
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayUseLogoEnabled(false);
-            actionBar.setHomeButtonEnabled(true);
-        }
+        imageView.setImageDrawable(new BitmapDrawable(getResources(), getHeaderImage()));
     }
 
     /**

@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-
 import io.github.mathiasberwig.cloudvision.R;
 import io.github.mathiasberwig.cloudvision.controller.service.CloudVisionUploader;
 import io.github.mathiasberwig.cloudvision.data.model.LogoInfo;
@@ -48,10 +45,10 @@ public class LogoFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
-        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LogoAdapter(LogoFragment.this, logosInfo));
+        RecyclerView.Adapter mAdapter = new LogoAdapter(LogoFragment.this, logosInfo);
         mRecyclerView.setAdapter(mAdapter);
-
-        // Register the RecyclerView
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
+//
+//         Register the RecyclerView
+//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
     }
 }

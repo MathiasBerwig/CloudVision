@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-
 import java.util.List;
 
 import io.github.mathiasberwig.cloudvision.R;
@@ -49,10 +46,10 @@ public class LabelsFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
-        RecyclerView.Adapter mAdapter = new RecyclerViewMaterialAdapter(new LabelsAdapter(getString(R.string.hint_label), labelsInfo));
+        RecyclerView.Adapter mAdapter = new LabelsAdapter(getString(R.string.hint_label), labelsInfo);
         mRecyclerView.setAdapter(mAdapter);
-
+//
         // Register the RecyclerView
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
+//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
     }
 }

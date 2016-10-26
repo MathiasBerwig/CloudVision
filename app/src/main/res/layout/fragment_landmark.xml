@@ -1,6 +1,4 @@
-<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,14 +7,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Material View Pager Placeholder -->
-        <include layout="@layout/material_view_pager_placeholder"/>
-
         <!-- Landmark Info Card -->
-        <include layout="@layout/fragment_card_wiki_article_info"/>
+        <include layout="@layout/fragment_card_wiki_article_info" />
 
         <!-- Landmark Map Card -->
-        <include layout="@layout/fragment_card_landmark_map"/>
-
+        <include layout="@layout/fragment_card_landmark_map" />
     </LinearLayout>
-</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+</android.support.v4.widget.NestedScrollView>

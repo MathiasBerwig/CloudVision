@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/cardMarginVertical"
-    android:layout_marginLeft="@dimen/cardMarginHorizontal"
-    android:layout_marginRight="@dimen/cardMarginHorizontal"
-    android:layout_marginTop="@dimen/cardMarginVertical"
-    app:cardCornerRadius="2dp"
+    android:layout_margin="@dimen/card_margin"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="false"
     app:contentPadding="0dp">
@@ -65,11 +61,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/txt_article_description"
-            android:text="@string/btn_more"
-            android:textSize="13sp"
-            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp" />
+            android:text="@string/btn_more"
+            android:textSize="13sp" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
