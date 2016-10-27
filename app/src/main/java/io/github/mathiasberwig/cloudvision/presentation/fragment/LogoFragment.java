@@ -47,8 +47,5 @@ public class LogoFragment extends Fragment {
         // Setup the RecyclerView Adapter
         RecyclerView.Adapter mAdapter = new LogoAdapter(LogoFragment.this, logosInfo);
         mRecyclerView.setAdapter(mAdapter);
-//
-//         Register the RecyclerView
-//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
     }
 }

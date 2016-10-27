@@ -48,8 +48,5 @@ public class LabelsFragment extends Fragment {
         // Setup the RecyclerView Adapter
         RecyclerView.Adapter mAdapter = new LabelsAdapter(getString(R.string.hint_label), labelsInfo);
         mRecyclerView.setAdapter(mAdapter);
-//
-        // Register the RecyclerView
-//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView);
     }
 }
