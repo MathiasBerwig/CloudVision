@@ -44,9 +44,9 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     private boolean hasLogo;
 
-    static final int TYPE_DESCRIPTION = 0;
-    static final int TYPE_CELL = 1;
-    static final int TYPE_LOGO = 2;
+    private static final int TYPE_DESCRIPTION = 0;
+    private static final int TYPE_CELL = 1;
+    private static final int TYPE_LOGO = 2;
 
     public LogoAdapter(Fragment fragment, LogoInfo logoInfo) {
         this.fragment = fragment;
@@ -151,12 +151,12 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * of an Article on Wikipedia, plus a {@link AppCompatButton Button} to open it on the default
      * browser.
      */
-    public static class DescriptionViewHolder extends RecyclerView.ViewHolder {
+    private static class DescriptionViewHolder extends RecyclerView.ViewHolder {
         TextView txtArticleName;
         TextView txtArticleDescription;
         AppCompatButton btnArticleInfoMore;
 
-        public DescriptionViewHolder(View v) {
+        DescriptionViewHolder(View v) {
             super(v);
             txtArticleName = (TextView) v.findViewById(R.id.txt_article_name);
             txtArticleDescription = (TextView) v.findViewById(R.id.txt_article_description);
@@ -168,13 +168,13 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * ViewHolder to store the icon and {@link TextView TextViews} that will show extra properties of
      * a brand.
      */
-    public static class BrandPropertyViewHolder extends RecyclerView.ViewHolder {
+    private static class BrandPropertyViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView imgPropertyIcon;
         TextView txtPropertyTitle;
         TextView txtPropertyValue;
 
-        public BrandPropertyViewHolder(View v) {
+        BrandPropertyViewHolder(View v) {
             super(v);
             cardView = (CardView) v.findViewById(R.id.card_view);
             imgPropertyIcon = (ImageView) v.findViewById(R.id.img_property_icon);
@@ -186,10 +186,10 @@ public class LogoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * ViewHolder to store an {@link ImageView} that will show the logo of a brand.
      */
-    public static class LogoPropertyViewHolder extends RecyclerView.ViewHolder {
+    private static class LogoPropertyViewHolder extends RecyclerView.ViewHolder {
         ImageView imgPropertyLogo;
 
-        public LogoPropertyViewHolder(View v) {
+        LogoPropertyViewHolder(View v) {
             super(v);
             imgPropertyLogo = (ImageView) v.findViewById(R.id.img_property_logo);
         }
