@@ -64,10 +64,6 @@ public class LandmarkFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Setup the ScrollView and register it with MaterialViewPager
-//        ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-//        MaterialViewPagerHelper.registerScrollView(getActivity(), scrollView, null);
-
         findInfoViews(view);
         setupInfoViews();
     }
