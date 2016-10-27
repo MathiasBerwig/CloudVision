@@ -71,8 +71,6 @@
     <string name="pref_category_cloud_vision">API do Cloud Vision</string>
     <string name="pref_title_image_quality">Qualidade da Imagem</string>
     <string name="pref_image_quality">Usada para compressão. 0 significa menor tamanho, 100 significa qualidade máxima.</string>
-    <string name="pref_title_max_labels">Número máximo de tags</string>
-    <string name="pref_max_labels">Quantas etiquetas você quer pesquisar para cada imagem?</string>
     <string name="pref_category_about">Sobre</string>
     <string name="pref_about">O Cloud Vision Demo é uma aplicação para Android (4.4+) que demonstra o funcionamento da API Cloud Vision de forma simples e bem documentada. Com o auxílio das APIs de busca do Wikipedia e Wikidata, ele exibe informações adicionais sobre logotipos e monumentos identificados na imagem, além de uma lista com as tags relacionadas.</string>
     <string name="pref_motivation">Ele foi desenvolvido por mim com alguns propósitos simples em mente: aprender um pouco mais sobre visão computacional; ocupar meu tempo livre criando um app para Android; conhecer melhor o Google Cloud Platform; e aprimorar minha escrita em inglês (nada melhor do que fazer documentação). A medida que o app foi tomando forma, meu interesse em mostra-lo à mais pessoas aumentou, por isso decidi torna-lo open source e escrever artigos acadêmicos sobre o tema.</string>

@@ -20,20 +20,6 @@
             sbpf:msbp_measurementUnit="%"
             sbpf:msbp_minValue="0"
             sbpf:msbp_view_enabled="false" />
-
-        <!-- Max number of tags -->
-        <com.pavelsikun.seekbarpreference.SeekBarPreference
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:defaultValue="5"
-            android:key="pref_max_labels"
-            android:summary="@string/pref_max_labels"
-            android:title="@string/pref_title_max_labels"
-            sbpf:msbp_dialogEnabled="false"
-            sbpf:msbp_interval="1"
-            sbpf:msbp_maxValue="15"
-            sbpf:msbp_minValue="0"
-            sbpf:msbp_view_enabled="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
