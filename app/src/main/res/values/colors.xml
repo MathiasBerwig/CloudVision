@@ -10,4 +10,6 @@
 
     <color name="colorTabInactive">#FF1A1E23</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorProgressBackground">#8D8D92</color>
+    <color name="colorProgressGreen">#4CAF50</color>
 </resources>

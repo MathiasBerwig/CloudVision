@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/card_margin">
 
-    <android.support.v7.widget.CardView
+    <TextView
+        android:id="@+id/txt_label_score"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="4dp"
+        android:textColor="@color/colorAccent"
+        tools:text="95%" />
+
+    <TextView
+        android:id="@+id/txt_label"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_margin="@dimen/card_margin"
-        android:layout_marginTop="4dp">
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_toStartOf="@id/txt_label_score"
+        tools:text="Label" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/pb_label_score"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_below="@id/txt_label"
+        android:padding="2dp"
+        app:rcBackgroundColor="@color/colorProgressBackground"
+        app:rcMax="1"
+        app:rcProgressColor="@color/colorProgressGreen"
+        app:rcRadius="2dp" />
 
-            <com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar
-                android:id="@+id/pb_image_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="2dp"
-                app:rcIconSize="30dp"
-                app:rcMax="1"
-                app:rcProgressColor="@color/colorPrimaryDark"
-                app:rcRadius="2dp"
-                app:rcSecondaryProgress="1"
-                app:rcSecondaryProgressColor="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/txt_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="38dp"
-                android:textColor="@color/white" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+</RelativeLayout>

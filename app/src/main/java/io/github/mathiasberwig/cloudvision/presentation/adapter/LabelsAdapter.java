@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar;
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,8 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<Object> contents;
 
-    static final int TYPE_HINT = 0;
-    static final int TYPE_CELL = 1;
+    private static final int TYPE_HINT = 0;
+    private static final int TYPE_CELL = 1;
 
     /**
      * Default constructor.
@@ -83,16 +84,15 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
             case TYPE_CELL: {
                 // Set the score of recognized tag in the ProgressBar
-                final IconRoundCornerProgressBar mProgressBar = ((LabelViewHolder) holder).progressBar;
-                Float score = ((LabelInfo) contents.get(position)).getScore();
-                mProgressBar.setProgress(score);
+                final Float score = ((LabelInfo) contents.get(position)).getScore();
+                ((LabelViewHolder) holder).progressBar.setProgress(score);
 
-                // Set the description of recognized tag in the TextView
-                final TextView mTextView = ((LabelViewHolder) holder).txtProgress;
+                // Set the description and score of recognized tag in the TextViews
                 String description = ((LabelInfo) contents.get(position)).getDescription();
-                // Format the description to "0% - tag"
-                description = String.format(Locale.getDefault(), "%1$.0f%%  - %2$s", score * 100, description);
-                mTextView.setText(description);
+                ((LabelViewHolder) holder).txtLabel.setText(description);
+                // Format the description to "0%"
+                String textScore = String.format(Locale.getDefault(), "%1$.0f%%", score * 100);
+                ((LabelViewHolder) holder).txtLabelScore.setText(textScore);
                 break;
             }
         }
@@ -101,10 +101,10 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     /**
      * ViewHolder to store a {@link TextView} that will show a hint to the user.
      */
-    public static class HintViewHolder extends RecyclerView.ViewHolder {
+    private static class HintViewHolder extends RecyclerView.ViewHolder {
         TextView txtLabelHint;
 
-        public HintViewHolder(View v) {
+        HintViewHolder(View v) {
             super(v);
             txtLabelHint = (TextView) v.findViewById(R.id.txt_label_hint);
         }
@@ -114,14 +114,16 @@ public class LabelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      * ViewHolder to store a {@link IconRoundCornerProgressBar ProgressBar} and a {@link TextView}
      * with annotations about the image.
      */
-    public static class LabelViewHolder extends RecyclerView.ViewHolder {
-        IconRoundCornerProgressBar progressBar;
-        TextView txtProgress;
+    private static class LabelViewHolder extends RecyclerView.ViewHolder {
+        RoundCornerProgressBar progressBar;
+        TextView txtLabel;
+        TextView txtLabelScore;
 
-        public LabelViewHolder(View v) {
+        LabelViewHolder(View v) {
             super(v);
-            progressBar = (IconRoundCornerProgressBar) v.findViewById(R.id.pb_image_label);
-            txtProgress = (TextView) v.findViewById(R.id.txt_progress);
+            progressBar = (RoundCornerProgressBar) v.findViewById(R.id.pb_label_score);
+            txtLabel = (TextView) v.findViewById(R.id.txt_label);
+            txtLabelScore = (TextView) v.findViewById(R.id.txt_label_score);
         }
     }
 }
