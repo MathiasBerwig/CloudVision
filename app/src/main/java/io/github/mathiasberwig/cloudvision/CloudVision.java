@@ -17,7 +17,7 @@ public class CloudVision extends Application {
 
         // Config Calligrahy to use Lato font
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                .setDefaultFontPath("fonts/Ubuntu-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
