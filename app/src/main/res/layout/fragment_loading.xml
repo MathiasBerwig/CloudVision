@@ -29,7 +29,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         htext:animateType="scale"
-        htext:fontAsset="fonts/Lato-Regular.ttf"
         tools:text="Placeholder Text Test"
         android:textStyle="bold" />
 
