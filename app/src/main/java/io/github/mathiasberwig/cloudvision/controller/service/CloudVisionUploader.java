@@ -100,7 +100,7 @@ public class CloudVisionUploader extends IntentService {
     public static final String EXTRA_RESULT_LANDMARK = "EXTRA_RESULT_LANDMARK";
 
     // Default values
-    private static final int DEFAULT_MAX_LABELS = 5;
+    private static final int DEFAULT_MAX_LABELS = 50;
     private static final int DEFAULT_MAX_LOGOS = 5;
     private static final int DEFAULT_MAX_LANDMARKS = 1;
     private static final int DEFAULT_MAX_IMAGE_PROPERTIES = 5;
