@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import io.github.mathiasberwig.cloudvision.presentation.fragment.LogoFragment;
  *
  * Created by MathiasBerwig on 29/03/16.
  */
-public class FragmentPageAdapter extends FragmentStatePagerAdapter {
+public class FragmentPageAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragments;
     private Context context;

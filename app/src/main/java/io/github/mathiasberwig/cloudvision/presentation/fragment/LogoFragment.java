@@ -42,7 +42,6 @@ public class LogoFragment extends Fragment {
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_logos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
         RecyclerView.Adapter mAdapter = new LogoAdapter(LogoFragment.this, logosInfo);

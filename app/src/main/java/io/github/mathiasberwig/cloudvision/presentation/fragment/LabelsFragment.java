@@ -43,7 +43,6 @@ public class LabelsFragment extends Fragment {
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_labels);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
 
         // Setup the RecyclerView Adapter
         RecyclerView.Adapter mAdapter = new LabelsAdapter(getString(R.string.hint_label), labelsInfo);
